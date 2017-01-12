@@ -1,9 +1,10 @@
-from app.wikipedia.connect_documents_with_words import get_words_from_text
+from app.data_import.connect_documents_with_words import get_words_from_text
 from stop_words import get_stop_words
 from app.database.parsers.result_parser import result_parse
 from app.database.database import database
 
-
+# This function returns all documents that are similar to the text given as input,
+# together with the coefficient of similarity between the returned document and the text
 def similar_documents(text):
     content_words = get_words_from_text(text)
     stop_words = get_stop_words("en")
@@ -72,6 +73,8 @@ def similar_documents(text):
     return result_list
 
 
+# This function combines the coefficients of similarity between the text and the returned similar documents
+# and returns one coefficient which describes how much the idea is innovative using the data in the database
 def text_popularity_coefficient(text):
     result = similar_documents(text)
     coefficient = 0
@@ -87,3 +90,14 @@ def text_popularity_coefficient(text):
     print(sum_same_words)
 
     return format(coefficient, '.4f')
+
+
+# This function returns similarity between two texts
+def text_similarity_coefficient(text1, text2):
+    return
+
+
+# This function is a helper function in case the texts we are looking similarity for are encapsulated in documents
+def document_similarity_coefficient(doc1, doc2):
+    return
+

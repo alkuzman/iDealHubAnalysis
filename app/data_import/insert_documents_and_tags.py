@@ -22,10 +22,14 @@ def insert_documents(document_limit, start_document_title, start_document_parent
         if title in visited_links:
             continue
 
+        visited_links.add(title)  # Add the title of the document as visited
+
         try:
             page = wikipedia.page(title)  # Get Wikipedia page for given title
         except exceptions.DisambiguationError as e:
             page = wikipedia.page(e.options[1])  # If there are multiple pages for that title, choose the first one
+        except exceptions.PageError as e:
+            continue
         # Add new document and the title as tag in the database for the given page
         database.query("CREATE (doc:Document {title: {title}, content: {content}})-[:TITLE]->"
                        "(tag:Tag:Title {value: {value}})",
@@ -37,8 +41,6 @@ def insert_documents(document_limit, start_document_title, start_document_parent
                 "MATCH (doc1:Document {title: {title}}), (doc2:Document {title: {parent}}) "
                 "CREATE (doc1)-[:LINK]->(doc2)",
                 {"title": title, "parent": node['parent']})
-
-        visited_links.add(title)  # Add the title of the document as visited
 
         # Pass all the links in the current page
         for link in page.links:

@@ -17,8 +17,6 @@ def connect_documents_with_words():
     # This map is mapping every word in another map
     # which contains document and number of occurrences of the word in that document
     map_of_words_to_map_of_document_to_number_of_occurrences_of_the_word = {}
-    # This map maps document to list of words in that document
-    map_of_titles_to_filtered_list_of_words = {}
 
     titles = []  # List of the titles of the documents
 
@@ -72,28 +70,18 @@ def connect_documents_with_words():
                 map_of_words_to_number_of_documents_it_occurs[word] = 0
             map_of_words_to_number_of_documents_it_occurs[word] += 1
 
-        # Add filtered list of words in the document to the map
-        map_of_titles_to_filtered_list_of_words[document.title] = word_list
-
     # We clear the word list from all common words. Words that appear in more of 40% of the documents
     clear_word_lists_from_common_words(total_documents, map_of_words_to_number_of_documents_it_occurs,
                                        map_of_words_to_map_of_document_to_number_of_occurrences_of_the_word,
-                                       map_of_words_to_lists_with_document_position_tuples,
-                                       map_of_titles_to_filtered_list_of_words)
+                                       map_of_words_to_lists_with_document_position_tuples)
 
     # We clear the pairs document word if that word appeared less than three times in the document
     clear_word_lists_from_not_important_words(map_of_words_to_map_of_document_to_number_of_occurrences_of_the_word,
-                                              map_of_words_to_lists_with_document_position_tuples,
-                                              map_of_titles_to_filtered_list_of_words, titles)
+                                              map_of_words_to_lists_with_document_position_tuples, titles)
 
     print(len(map_of_words_to_lists_with_document_position_tuples))
-    database.open_connection()
 
-    # Add number_of_words property to every document
-    for title in map_of_titles_to_filtered_list_of_words:
-        database.query("MATCH (doc:Document)-[:TITLE]->(title:Title {value: {value}}) "
-                       "SET doc.number_of_words = {number_of_words}",
-                       {"value": title, "number_of_words": len(map_of_titles_to_filtered_list_of_words[title])})
+    database.open_connection()
 
     # For every word in the map of words to list of document position pairs
     for word in map_of_words_to_lists_with_document_position_tuples:
@@ -114,6 +102,11 @@ def connect_documents_with_words():
                                "CREATE (doc)-[:CONTAINS {position: {position}}]->(w)",
                                {"id_w": id_word, "id_doc": entry[0], "position": entry[1]})
 
+    # Set the number of words in a document as a document property
+    database.query("MATCH (doc:Document)-[:CONTAINS]->(w:Word) "
+                   "WITH doc, COUNT(w) AS num_words "
+                   "SET doc.number_of_words = num_words")
+
     database.close_connection()
 
     return
@@ -121,24 +114,19 @@ def connect_documents_with_words():
 
 def clear_word_lists_from_common_words(total_documents, map_of_words_to_number_of_documents_it_occurs,
                                        map_of_words_to_map_of_document_to_number_of_occurrences_of_the_word,
-                                       map_of_words_to_lists_with_document_position_tuples,
-                                       map_of_titles_to_filtered_list_of_words):
+                                       map_of_words_to_lists_with_document_position_tuples):
     threshold = (40 / 100) * total_documents
     common_words = [word for word, value in map_of_words_to_number_of_documents_it_occurs.items() if value > threshold]
     for word in common_words:
         del map_of_words_to_number_of_documents_it_occurs[word]
         del map_of_words_to_map_of_document_to_number_of_occurrences_of_the_word[word]
         del map_of_words_to_lists_with_document_position_tuples[word]
-        for document in map_of_titles_to_filtered_list_of_words.keys():
-            if word in map_of_titles_to_filtered_list_of_words[document]:
-                map_of_titles_to_filtered_list_of_words[document].remove(word)
 
     return
 
 
 def clear_word_lists_from_not_important_words(map_of_words_to_map_of_document_to_number_of_occurrences_of_the_word,
-                                              map_of_words_to_lists_with_document_position_tuples,
-                                              map_of_titles_to_filtered_list_of_words, titles):
+                                              map_of_words_to_lists_with_document_position_tuples, titles):
     words = [word for word in map_of_words_to_map_of_document_to_number_of_occurrences_of_the_word]
     for word in words:
         for title in titles:
@@ -148,7 +136,6 @@ def clear_word_lists_from_not_important_words(map_of_words_to_map_of_document_to
                     map_of_words_to_lists_with_document_position_tuples[word] = \
                         [entry for entry in map_of_words_to_lists_with_document_position_tuples[word] if
                          entry[0] != title]
-                    map_of_titles_to_filtered_list_of_words[title].remove(word)
 
     return
 

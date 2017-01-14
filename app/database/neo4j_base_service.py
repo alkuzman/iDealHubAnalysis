@@ -13,6 +13,7 @@ def get_documents_from_database():
     return documents
 
 
+# Retrieving all tags for a document
 def get_tags_for_document(title):
     database.open_connection()
     result = database.query("MATCH (doc:Document {title: {title}})-[:TAG]-(tag:Tag)"
@@ -22,3 +23,14 @@ def get_tags_for_document(title):
     tags = result_parse(result)
 
     return tags
+
+
+# Retrieve all distinct words from database
+def get_words_from_database():
+    database.open_connection()
+    result = database.query("MATCH (w:Word) RETURN DISTINCT(w)")
+    database.close_connection()
+
+    words = result_parse(result)
+
+    return words

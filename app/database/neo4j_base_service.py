@@ -11,3 +11,14 @@ def get_documents_from_database():
     documents = result_parse(result)
 
     return documents
+
+
+def get_tags_for_document(title):
+    database.open_connection()
+    result = database.query("MATCH (doc:Document {title: {title}})-[:TAG]-(tag:Tag)"
+                            "RETURN tag", {"title": title})
+    database.close_connection()
+
+    tags = result_parse(result)
+
+    return tags

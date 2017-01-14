@@ -8,3 +8,17 @@ def document_parse(node):
     document.id = node.id
 
     return document
+
+
+def word_parse(node):
+    word = Object()
+    word.word = node.properties["word"]
+
+    return word
+
+
+def tag_parse(node):
+    tag = Object()
+    tag.tag = node.properties["tag"]
+
+    return tag

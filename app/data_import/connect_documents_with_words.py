@@ -1,5 +1,5 @@
 from stop_words import get_stop_words
-from app.database.parsers import result_parser
+from app.database.neo4j_base_service import get_documents_from_database
 import re
 from app.database.database import database
 
@@ -71,7 +71,7 @@ def connect_documents_with_words():
                                        map_of_words_to_map_of_document_to_number_of_occurrences_of_the_word,
                                        map_of_words_to_lists_with_document_position_tuples)
 
-    # We clear the pairs document word if that word appeared less than two times in the document
+    # We clear the pairs document word if that word appeared less than three times in the document
     clear_word_lists_from_not_important_words(map_of_words_to_map_of_document_to_number_of_occurrences_of_the_word,
                                               map_of_words_to_lists_with_document_position_tuples, titles)
 
@@ -126,17 +126,6 @@ def clear_word_lists_from_not_important_words(map_of_words_to_map_of_document_to
                          entry[0] != title]
 
     return
-
-
-# Retrieving all documents in the database
-def get_documents_from_database():
-    database.open_connection()
-    result = database.query("MATCH (doc:Document) RETURN (doc)")
-    database.close_connection()
-
-    documents = result_parser.result_parse(result)
-
-    return documents
 
 
 # Extracting the words from a text using regular expression

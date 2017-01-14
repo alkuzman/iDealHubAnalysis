@@ -1,12 +1,11 @@
 from app.data_import.connect_documents_with_words import get_words_from_text
-from app.database.parsers.result_parser import result_parse
 from app.database.database import database
-from app.database.neo4j_base_service import get_words_from_database
+from app.database.neo4j_base_service import get_words_from_database, get_document_for_title
 
 
 # This function returns all documents that are similar to the text given as input,
 # together with the coefficient of similarity between the returned document and the text
-def similar_documents(text, limit):
+def similar_documents(text, limit, threshold=0.3):
     content_words = get_words_from_text(text)  # Extract the words from the text and put them in a list
 
     # Get all words from the database, we only need the relevant words to find similar documents
@@ -46,7 +45,7 @@ def similar_documents(text, limit):
                     "THEN {initial_doc_word_count} ELSE doc.number_of_words END AS min " \
                     "WITH number_of_same_words / toFloat(min) AS coefficient, " \
                     "title, number_of_words, number_of_same_words, min " \
-                    "WHERE coefficient > toFloat(\"0.3\") " \
+                    "WHERE coefficient > toFloat({threshold}) " \
                     "AND number_of_same_words / toFloat({initial_doc_word_count}) > 1 / toFloat(100) " \
                     "RETURN title, min, number_of_words, number_of_same_words, coefficient " \
                     "ORDER BY coefficient DESC, number_of_same_words DESC " \
@@ -54,6 +53,7 @@ def similar_documents(text, limit):
 
     print(string_query)
     parameters["initial_doc_word_count"] = initial_word_count
+    parameters["threshold"] = threshold
     parameters["limit"] = limit
 
     database.open_connection()
@@ -71,17 +71,13 @@ def similar_documents(text, limit):
 
 # This function is helper function which finds similar documents to text if the text is encapsulated in a document
 def similar_documents_to_document(title, limit=20):
-    database.open_connection()
-    result = database.query("MATCH (doc:Document {title: {title}}) RETURN doc", {"title": title})
-    database.close_connection()
-    document = result_parse(result)
-    return similar_documents(document.content, limit)
+    return similar_documents(get_document_for_title(title).content, limit)
 
 
 # This function combines the coefficients of similarity between the text and the returned similar documents
 # and returns one coefficient which describes how much the idea is innovative using the data in the database
 def text_popularity_coefficient(text):
-    result = similar_documents(text, 100)
+    result = similar_documents(text, 100, 0)
     coefficient = 0
     sum_same_words = 0
     for record in result:

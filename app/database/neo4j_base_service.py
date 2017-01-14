@@ -28,9 +28,18 @@ def get_tags_for_document(title):
 # Retrieve all distinct words from database
 def get_words_from_database():
     database.open_connection()
-    result = database.query("MATCH (w:Word) RETURN DISTINCT(w)")
+    result = database.query("MATCH (w:Word) RETURN DISTINCT(w) ORDER BY w.word")
     database.close_connection()
 
     words = result_parse(result)
 
     return words
+
+
+# Return document for given title
+def get_document_for_title(title):
+    database.open_connection()
+    result = database.query("MATCH (doc:Document {title: {title}}) RETURN doc", {"title": title})
+    database.close_connection()
+
+    return result_parse(result)

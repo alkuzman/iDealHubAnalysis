@@ -1,5 +1,5 @@
 from flask import request
-from app.analyzers.documents_similarity import text_popularity_coefficient
+from app.analyzers.similar_documents import text_popularity_coefficient
 from flask import Blueprint
 
 rest = Blueprint("rest", __name__)

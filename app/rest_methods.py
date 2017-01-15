@@ -25,6 +25,4 @@ def similar_documents_analyzer():
     data = request.data
     text = json.loads(data)
     limit = request.args.get("limit")
-    result = {}
-    result.value = similar_documents(text, limit)
-    return result
+    return similar_documents(text, limit)

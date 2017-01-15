@@ -16,23 +16,16 @@ def similar_documents(text, limit, threshold=0.3, metric='Custom'):
 
     important_words = word_list
 
+    words = "\", \"".join(important_words)
+    words = "\"" + words + "\""
+
     # Building the query
     if metric == 'Custom':
         string_query = "MATCH (doc:Document)-[:CONTAINS]->(word:Word) " \
                        "WHERE word.word in ["
 
         parameters = {}
-        index = 0
-        for word in important_words:
-            index += 1
-            # parameter = "word" + str(index)
-            # parameters[parameter] = word
-            # string_query += "{" + parameter + "}"
-            string_query += "\"" + word + "\""
-            if index < len(important_words):
-                string_query += ", "
-            else:
-                break
+        string_query += words
         # Returning all documents for which
         # number_of_same_words / min(number_words_text1, number_words_text2) > threshold
         string_query += "] " \
@@ -57,18 +50,7 @@ def similar_documents(text, limit, threshold=0.3, metric='Custom'):
                        "WHERE word.word in ["
 
         parameters = {}
-        index = 0
-        for word in important_words:
-            index += 1
-            # parameter = "word" + str(index)
-            # parameters[parameter] = word
-            # string_query += "{" + parameter + "}"
-            string_query += "\"" + word + "\""
-            if index < len(important_words):
-                string_query += ", "
-            else:
-                break
-
+        string_query += words
         # Returning all documents for which cosine similarity is bigger than threshold
         string_query += "] " \
                         "WITH doc.title AS title, COUNT(word) AS number_of_same_words, " \
@@ -109,15 +91,12 @@ def similar_documents_to_document(title, limit=20, threshold=0.3, metric='Custom
 
 # This function combines the coefficients of similarity between the text and the returned similar documents
 # and returns one coefficient which describes how much the idea is innovative using the data in the database
-def text_popularity_coefficient(text):
-    result = similar_documents(text, 100, 0)
+def text_popularity_coefficient(text, metric="Cosine"):
+    result = similar_documents(text, 100, 0, metric)
     coefficient = 0
-    sum_same_words = 0
-    for record in result:
-        sum_same_words += record["number_of_same_words"]
 
     for record in result:
-        intermediate_coefficient = record["coefficient"] * (record["number_of_same_words"] / sum_same_words)
-        coefficient += intermediate_coefficient
+        coefficient += record["coefficient"]
 
-    return format(coefficient, '.4f')
+    print(coefficient)
+    return format(coefficient / 100, '.4f')

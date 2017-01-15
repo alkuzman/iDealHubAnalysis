@@ -17,15 +17,15 @@ def start():
           "The user must change username and password for the database in the config file")
 
     # This function is for importing 500 documents from Wikipedia starting from the page 'Science'
-    # import_documents()
+    # insert_documents(500, 'Science')
 
     # This function is for connecting documents with the filtered words in their content
     # connect_documents_with_words()
 
-    # This function is for testing how similar_documents are found
-    # result = similar_documents_to_document("Cancer", 10)
-    # for record in result:
-    #    print(record)
+    # This function is for testing how similar_documents are found. Metric can be Custom or Cosine
+    result = similar_documents_to_document("Cancer", 10, metric='Cosine')
+    for record in result:
+        print(record)
 
     # This function connects the documents with their tags
     # connect_documents_with_tags()
@@ -45,8 +45,5 @@ def start():
     # tag_relevance = tag_relevance_coefficient('Cancer')
     # print(tag_relevance)
 
-
-def import_documents():
-    insert_documents(500, 'Science')
 
 start()

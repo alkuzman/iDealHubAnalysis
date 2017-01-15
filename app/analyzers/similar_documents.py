@@ -1,6 +1,7 @@
 from app.data_import.connect_documents_with_words import get_words_from_text
 from app.database.database import database
 from app.database.neo4j_base_service import get_words_from_database, get_document_for_title
+from stop_words import get_stop_words
 
 
 # This function returns all documents that are similar to the text given as input,
@@ -8,13 +9,9 @@ from app.database.neo4j_base_service import get_words_from_database, get_documen
 def similar_documents(text, limit, threshold=0.3, metric='Custom'):
     content_words = get_words_from_text(text)  # Extract the words from the text and put them in a list
 
-    # Get all words from the database, we only need the relevant words to find similar documents
-    database_words = get_words_from_database()
-
-    database_words = [word.word for word in database_words]  # Extract the word value only not the whole node
-
     # Filter the words from the content so the irrelevant words can be excluded
-    word_list = [word.lower() for word in content_words if word.lower() in database_words]
+    stop_words = get_stop_words("en")
+    word_list = [word.lower() for word in content_words if word.lower() not in stop_words]
     initial_word_count = len(word_list)
 
     important_words = word_list

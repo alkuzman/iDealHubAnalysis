@@ -24,9 +24,9 @@ def start():
     # connect_documents_with_words()
 
     # This function is for testing how similar_documents are found. Metric can be Custom or Cosine
-    # result = similar_documents_to_document("Cancer", 10, 0.3, metric='Custom')
+    # result = similar_documents_to_document('Cancer', 10, 0.3, metric='Custom')
     # for record in result:
-    #    print(record)
+    #   print(record)
 
     # This function returns how much a document is popular in the database
     # print(document_popularity_coefficient('Cancer'))

@@ -107,6 +107,11 @@ def connect_documents_with_words():
                    "WITH doc, COUNT(w) AS num_words "
                    "SET doc.number_of_words = num_words")
 
+    # Set the number of distinct words in a document as a document property
+    database.query("MATCH (doc:Document)-[:CONTAINS]->(w:Word) "
+                   "WITH doc, COUNT(DISTINCT(w)) AS distinct_words "
+                   "SET doc.number_of_distinct_words = distinct_words")
+
     database.close_connection()
 
     return

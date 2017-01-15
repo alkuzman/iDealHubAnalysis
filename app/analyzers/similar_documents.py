@@ -11,7 +11,7 @@ def similar_documents(text, limit, threshold=0.3, metric='Custom'):
 
     # Filter the words from the content so the irrelevant words can be excluded
     stop_words = get_stop_words("en")
-    word_list = [word.lower() for word in content_words if word.lower() not in stop_words]
+    word_list = set([word.lower() for word in content_words if word.lower() not in stop_words])
     initial_word_count = len(word_list)
 
     important_words = word_list
@@ -29,10 +29,10 @@ def similar_documents(text, limit, threshold=0.3, metric='Custom'):
         # Returning all documents for which
         # number_of_same_words / min(number_words_text1, number_words_text2) > threshold
         string_query += "] " \
-                        "WITH doc.title AS title, COUNT(word) AS number_of_same_words, " \
-                        "doc.number_of_words AS number_of_words, " \
-                        "CASE WHEN {initial_doc_word_count} < doc.number_of_words " \
-                        "THEN {initial_doc_word_count} ELSE doc.number_of_words END AS min " \
+                        "WITH doc.title AS title, COUNT(DISTINCT(word)) AS number_of_same_words, " \
+                        "doc.number_of_distinct_words AS number_of_words, " \
+                        "CASE WHEN {initial_doc_word_count} < doc.number_of_distinct_words " \
+                        "THEN {initial_doc_word_count} ELSE doc.number_of_distinct_words END AS min " \
                         "WITH number_of_same_words / toFloat(min) AS coefficient, " \
                         "title, number_of_words, number_of_same_words, min " \
                         "WHERE coefficient > toFloat({threshold}) " \
@@ -53,8 +53,8 @@ def similar_documents(text, limit, threshold=0.3, metric='Custom'):
         string_query += words
         # Returning all documents for which cosine similarity is bigger than threshold
         string_query += "] " \
-                        "WITH doc.title AS title, COUNT(word) AS number_of_same_words, " \
-                        "doc.number_of_words AS number_of_words " \
+                        "WITH doc.title AS title, COUNT(DISTINCT(word)) AS number_of_same_words, " \
+                        "doc.number_of_distinct_words AS number_of_words " \
                         "WITH (number_of_same_words * number_of_same_words) / " \
                         "(toFloat({initial_doc_word_count}) * number_of_words) " \
                         "AS coefficient, " \
@@ -95,6 +95,7 @@ def text_popularity_coefficient(text, metric='Cosine'):
     coefficient = 0
 
     for title in result.keys():
+        print(result[title], title)
         coefficient += result[title]
 
     return format(coefficient / len(result), '.4f')

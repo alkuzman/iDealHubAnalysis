@@ -10,11 +10,11 @@ def connect_documents_with_tags():
 
     # For every document find five similar documents and add their titles as document tags
     for document in documents:
-        doc_titles = similar_documents_to_document(document.title, 5).keys()
+        list = similar_documents_to_document(document.title, 5)
         tags = []
 
-        for title in doc_titles:
-            tags.append(title)
+        for entry in list:
+            tags.append(entry["list"])
 
         # For every document create relationship in the database
         # between the document and the tags that we have initialized in the list

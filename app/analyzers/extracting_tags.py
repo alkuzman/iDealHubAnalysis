@@ -4,12 +4,12 @@ from app.database.neo4j_base_service import get_tags_for_document, get_document_
 
 # This function returns tags for given text
 def extract_tags_from_text(text, limit=5):
-    titles = similar_documents(text, 5).keys()  # Find the five most similar documents to the text
+    list = similar_documents(text, 5) # Find the five most similar documents to the text
     tags = set()  # Set of all tags for the text
 
     # For every document get the tags it has and add them in the set
-    for title in titles:
-        document_tags = get_tags_for_document(title)
+    for entry in list:
+        document_tags = get_tags_for_document(entry["title"])
         for tag in document_tags:
             tags.add(tag.value)
         if len(tags) == limit:

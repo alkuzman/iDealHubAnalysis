@@ -24,7 +24,6 @@ def similar_documents(text, limit, threshold=0.3):
                    "WHERE word.word in ["
 
     parameters = {}
-    print(len(important_words))
     index = 0
     for word in important_words:
         index += 1
@@ -51,7 +50,6 @@ def similar_documents(text, limit, threshold=0.3):
                     "ORDER BY coefficient DESC, number_of_same_words DESC " \
                     "LIMIT {limit}"
 
-    print(string_query)
     parameters["initial_doc_word_count"] = initial_word_count
     parameters["threshold"] = threshold
     parameters["limit"] = limit
@@ -85,9 +83,6 @@ def text_popularity_coefficient(text):
 
     for record in result:
         intermediate_coefficient = record["coefficient"] * (record["number_of_same_words"] / sum_same_words)
-        print(intermediate_coefficient)
         coefficient += intermediate_coefficient
-
-    print(sum_same_words)
 
     return format(coefficient, '.4f')

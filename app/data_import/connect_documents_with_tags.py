@@ -45,7 +45,6 @@ def connect_documents_with_tags():
                 query += ", "
 
         counter += 1
-        print(counter)
 
         database.query(query, parameters)
 

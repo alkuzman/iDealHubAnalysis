@@ -19,6 +19,6 @@ def word_parse(node):
 
 def tag_parse(node):
     tag = Object()
-    tag.tag = node.properties["tag"]
+    tag.value = node.properties["value"]
 
     return tag

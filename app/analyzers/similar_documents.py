@@ -75,13 +75,12 @@ def similar_documents(text, limit, threshold=0.3, metric='Custom'):
     result = database.query(string_query, parameters)  # Return the query result
     database.close_connection()
 
-    result_list = []
+    result_dict = {}
 
     for record in result:
-        entry = record
-        result_list.append(entry)
+        result_dict[record["title"]] = record["coefficient"]
 
-    return result_list
+    return result_dict
 
 
 # This function is helper function which finds similar documents to text if the text is encapsulated in a document
@@ -91,12 +90,16 @@ def similar_documents_to_document(title, limit=20, threshold=0.3, metric='Custom
 
 # This function combines the coefficients of similarity between the text and the returned similar documents
 # and returns one coefficient which describes how much the idea is innovative using the data in the database
-def text_popularity_coefficient(text, metric="Cosine"):
+def text_popularity_coefficient(text, metric='Cosine'):
     result = similar_documents(text, 100, 0, metric)
     coefficient = 0
 
-    for record in result:
-        coefficient += record["coefficient"]
+    for title in result.keys():
+        coefficient += result[title]
 
-    print(coefficient)
-    return format(coefficient / 100, '.4f')
+    return format(coefficient / len(result), '.4f')
+
+
+# This function is helper function which finds similar documents to text if the text is encapsulated in a document
+def document_popularity_coefficient(title, metric='Cosine'):
+    return text_popularity_coefficient(get_document_for_title(title).content, metric)

@@ -1,5 +1,5 @@
 from flask import Blueprint
-from app.analyzers.similar_documents import similar_documents_to_document
+from app.analyzers.similar_documents import similar_documents_to_document, document_popularity_coefficient
 from app.analyzers.extracting_tags import extract_tags_from_document_content, extract_tags_from_text
 from app.analyzers.relevant_words_and_tags import tag_relevance_coefficient, word_relevance_coefficient
 from app.analyzers.documents_similarity import document_similarity_coefficient
@@ -27,6 +27,9 @@ def start():
     # result = similar_documents_to_document("Cancer", 10, 0.3, metric='Custom')
     # for record in result:
     #    print(record)
+
+    # This function returns how much a document is popular in the database
+    # print(document_popularity_coefficient('Cancer'))
 
     # This function connects the documents with their tags
     # connect_documents_with_tags()

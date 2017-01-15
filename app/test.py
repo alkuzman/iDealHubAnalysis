@@ -2,6 +2,7 @@ from flask import Blueprint
 from app.analyzers.similar_documents import similar_documents_to_document
 from app.analyzers.extracting_tags import extract_tags_from_document_content, extract_tags_from_text
 from app.analyzers.relevant_words_and_tags import tag_relevance_coefficient, word_relevance_coefficient
+from app.analyzers.documents_similarity import document_similarity_coefficient
 from app.data_import.connect_documents_with_tags import connect_documents_with_tags
 from app.data_import.insert_documents_and_tags import insert_documents
 from app.data_import.connect_documents_with_words import connect_documents_with_words
@@ -45,5 +46,8 @@ def start():
     # tag_relevance = tag_relevance_coefficient('Cancer')
     # print(tag_relevance)
 
+    # This function returns coefficient of similarity between two documents for different metrics.
+    # Metrics that can be chosen are Cosine, Euclid, Jaccard or Custom
+    # print(document_similarity_coefficient('Cancer', 'Genetics'))
 
 start()

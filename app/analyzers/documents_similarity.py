@@ -1,103 +1,78 @@
-from app.data_import.connect_documents_with_words import get_words_from_text
-from stop_words import get_stop_words
-from app.database.parsers.result_parser import result_parse
 from app.database.database import database
-
-# This function returns all documents that are similar to the text given as input,
-# together with the coefficient of similarity between the returned document and the text
-def similar_documents(text):
-    content_words = get_words_from_text(text)
-    stop_words = get_stop_words("en")
-
-    database.open_connection()
-    result_words = database.query("MATCH (w:Word) RETURN (w)")
-    database.close_connection()
-
-    database_words = result_parse(result_words)
-    database_words = [word.word for word in database_words]
-
-    word_list = [word.lower() for word in content_words if word not in stop_words and len(word) > 2
-                 and word.lower() in database_words]
-    map_of_word_to_number_of_occurrences = {}
-
-    for word in word_list:
-        number_of_occurrences = 0
-        if word in map_of_word_to_number_of_occurrences:
-            number_of_occurrences = map_of_word_to_number_of_occurrences[word]
-        number_of_occurrences += 1
-        map_of_word_to_number_of_occurrences[word] = number_of_occurrences
-
-    important_words = [word for word, num_occurrences in map_of_word_to_number_of_occurrences.items()
-                       if num_occurrences > 2]
-
-    string_query = "MATCH (doc:Document)-[rel:CONTAINS]->(w:Word) " \
-                   "WITH doc, COUNT(DISTINCT(w)) AS number_of_words " \
-                   "MATCH (doc:Document)-[rel:CONTAINS]->(w:Word) " \
-                   "WHERE w.word in ["
-
-    parameters = {}
-    index = 0
-    for word in important_words:
-        index += 1
-        parameter = "word" + str(index)
-        parameters[parameter] = word
-        string_query += "{" + parameter + "}"
-        # string_query += "\"" + word + "\""
-        if index < len(important_words):
-            string_query += ", "
-        else:
-            break
-    string_query += "] " \
-                    "WITH doc, COUNT(DISTINCT(w)) AS number_of_same_words, number_of_words, " \
-                    "CASE WHEN {initial_doc_word_count} < number_of_words " \
-                    "THEN {initial_doc_word_count} ELSE number_of_words END AS min " \
-                    "WITH number_of_same_words / toFloat(min) AS coefficient, " \
-                    "doc, number_of_words, number_of_same_words " \
-                    "WHERE coefficient > toFloat(\"0.2\") AND number_of_same_words >= 2 " \
-                    "RETURN doc.title, number_of_words, number_of_same_words, coefficient " \
-                    "ORDER BY coefficient DESC"
-
-    print(string_query)
-    parameters["initial_doc_word_count"] = index
-
-    database.open_connection()
-    result = database.query(string_query, parameters)
-    database.close_connection()
-
-    result_list = []
-
-    for record in result:
-        entry = record
-        result_list.append(entry)
-
-    return result_list
-
-
-# This function combines the coefficients of similarity between the text and the returned similar documents
-# and returns one coefficient which describes how much the idea is innovative using the data in the database
-def text_popularity_coefficient(text):
-    result = similar_documents(text)
-    coefficient = 0
-    sum_same_words = 0
-    for record in result:
-        sum_same_words += record["number_of_same_words"]
-
-    for record in result:
-        intermediate_coefficient = record["coefficient"] * (record["number_of_same_words"] / sum_same_words)
-        print(intermediate_coefficient)
-        coefficient += intermediate_coefficient
-
-    print(sum_same_words)
-
-    return format(coefficient, '.4f')
+from app.database.neo4j_base_service import get_words_from_database
+from math import sqrt, pow, e
 
 
 # This function returns similarity between two texts
-def text_similarity_coefficient(text1, text2):
-    return
+def document_similarity_coefficient(title1, title2, metric='Custom'):
+    map_words_num_occurrences_doc1 = get_map_of_words_and_number_of_occurrences_for_document(title1)
+    map_words_num_occurrences_doc2 = get_map_of_words_and_number_of_occurrences_for_document(title2)
+
+    vector1 = []
+    vector2 = []
+
+    words = get_words_from_database()
+    for word in words:
+        if word.word in map_words_num_occurrences_doc1:
+            vector1.append(map_words_num_occurrences_doc1[word.word])
+        else:
+            vector1.append(0)
+
+        if word.word in map_words_num_occurrences_doc2:
+            vector2.append(map_words_num_occurrences_doc2[word.word])
+        else:
+            vector2.append(0)
+
+    similarity = 0
+    if metric == 'Cosine':
+        similarity = text_similarity_cosine(vector1, vector2)
+    if metric == 'Euclid':
+        similarity = text_similarity_euclid(vector1, vector2)
+    if metric == 'Jaccard':
+        similarity = text_similarity_jaccard(vector1, vector2)
+    if metric == 'Custom':
+        similarity = text_similarity_custom(vector1, vector2)
+
+    return round(similarity, 3)
 
 
-# This function is a helper function in case the texts we are looking similarity for are encapsulated in documents
-def document_similarity_coefficient(doc1, doc2):
-    return
+def text_similarity_cosine(vector1, vector2):
+    numerator = sum(a * b for a, b in zip(vector1, vector2))
+    denominator = square_rooted(vector1) * square_rooted(vector2)
+    return round(numerator / float(denominator), 3)
+
+
+def square_rooted(x):
+    return round(sqrt(sum([a * a for a in x])), 3)
+
+
+def text_similarity_jaccard(vector1, vector2):
+    intersection_cardinality = sum(1 for a, b in zip(vector1, vector2) if min(a,b) > 0)
+    union_cardinality = sum(1 for a, b in zip(vector1, vector2) if max(a,b) > 0)
+    return intersection_cardinality / float(union_cardinality)
+
+
+def text_similarity_euclid(vector1, vector2):
+    distance = sqrt(sum(pow(a - b, 2) for a, b in zip(vector1, vector2)))
+    if distance == 0:
+        return 1
+    print(e)
+    return 1 / (1 + distance)
+
+
+def text_similarity_custom(vector1, vector2):
+    return sum(min(a, b) for a, b in zip(vector1, vector2)) / min(sum(vector1), sum(vector2))
+
+
+# This function returns map of words and their number of occurrences in the
+def get_map_of_words_and_number_of_occurrences_for_document(title):
+    database.open_connection()
+    result = database.query("MATCH (doc:Document {title: {title}})-[:CONTAINS]->(w:Word) "
+                            "RETURN DISTINCT(w) AS word, COUNT(w) AS num_occurrences", {"title": title})
+    database.close_connection()
+    map_word_num_occurrences = {}
+    for record in result:
+        map_word_num_occurrences[record["word"].properties["word"]] = record["num_occurrences"]
+
+    return map_word_num_occurrences
 

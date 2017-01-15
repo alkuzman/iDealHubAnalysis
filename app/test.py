@@ -23,9 +23,9 @@ def start():
     # connect_documents_with_words()
 
     # This function is for testing how similar_documents are found. Metric can be Custom or Cosine
-    result = similar_documents_to_document("Cancer", 10, metric='Cosine')
-    for record in result:
-        print(record)
+    # result = similar_documents_to_document("Cancer", 10, 0.3, metric='Custom')
+    # for record in result:
+    #    print(record)
 
     # This function connects the documents with their tags
     # connect_documents_with_tags()

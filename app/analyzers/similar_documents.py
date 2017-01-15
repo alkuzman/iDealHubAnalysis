@@ -5,7 +5,7 @@ from app.database.neo4j_base_service import get_words_from_database, get_documen
 
 # This function returns all documents that are similar to the text given as input,
 # together with the coefficient of similarity between the returned document and the text
-def similar_documents(text, limit, threshold=0.3):
+def similar_documents(text, limit, threshold=0.3, metric='Custom'):
     content_words = get_words_from_text(text)  # Extract the words from the text and put them in a list
 
     # Get all words from the database, we only need the relevant words to find similar documents
@@ -20,39 +20,76 @@ def similar_documents(text, limit, threshold=0.3):
     important_words = word_list
 
     # Building the query
-    string_query = "MATCH (doc:Document)-[:CONTAINS]->(word:Word) " \
-                   "WHERE word.word in ["
+    if metric == 'Custom':
+        string_query = "MATCH (doc:Document)-[:CONTAINS]->(word:Word) " \
+                       "WHERE word.word in ["
 
-    parameters = {}
-    index = 0
-    for word in important_words:
-        index += 1
-        # parameter = "word" + str(index)
-        # parameters[parameter] = word
-        # string_query += "{" + parameter + "}"
-        string_query += "\"" + word + "\""
-        if index < len(important_words):
-            string_query += ", "
-        else:
-            break
-    # Returning all documents for which number_of_same_words / min(number_words_text1, number_words_text2) > 0.2
-    # Also both texts need to have at least two same words
-    string_query += "] " \
-                    "WITH doc.title AS title, COUNT(word) AS number_of_same_words, " \
-                    "doc.number_of_words AS number_of_words, " \
-                    "CASE WHEN {initial_doc_word_count} < doc.number_of_words " \
-                    "THEN {initial_doc_word_count} ELSE doc.number_of_words END AS min " \
-                    "WITH number_of_same_words / toFloat(min) AS coefficient, " \
-                    "title, number_of_words, number_of_same_words, min " \
-                    "WHERE coefficient > toFloat({threshold}) " \
-                    "AND number_of_same_words / toFloat({initial_doc_word_count}) > 1 / toFloat(100) " \
-                    "RETURN title, min, number_of_words, number_of_same_words, coefficient " \
-                    "ORDER BY coefficient DESC, number_of_same_words DESC " \
-                    "LIMIT {limit}"
+        parameters = {}
+        index = 0
+        for word in important_words:
+            index += 1
+            # parameter = "word" + str(index)
+            # parameters[parameter] = word
+            # string_query += "{" + parameter + "}"
+            string_query += "\"" + word + "\""
+            if index < len(important_words):
+                string_query += ", "
+            else:
+                break
+        # Returning all documents for which
+        # number_of_same_words / min(number_words_text1, number_words_text2) > threshold
+        string_query += "] " \
+                        "WITH doc.title AS title, COUNT(word) AS number_of_same_words, " \
+                        "doc.number_of_words AS number_of_words, " \
+                        "CASE WHEN {initial_doc_word_count} < doc.number_of_words " \
+                        "THEN {initial_doc_word_count} ELSE doc.number_of_words END AS min " \
+                        "WITH number_of_same_words / toFloat(min) AS coefficient, " \
+                        "title, number_of_words, number_of_same_words, min " \
+                        "WHERE coefficient > toFloat({threshold}) " \
+                        "AND number_of_same_words / toFloat({initial_doc_word_count}) > 1 / toFloat(100) " \
+                        "RETURN title, min, number_of_words, number_of_same_words, coefficient " \
+                        "ORDER BY coefficient DESC, number_of_same_words DESC " \
+                        "LIMIT {limit}"
 
-    parameters["initial_doc_word_count"] = initial_word_count
-    parameters["threshold"] = threshold
-    parameters["limit"] = limit
+        parameters["initial_doc_word_count"] = initial_word_count
+        parameters["threshold"] = threshold
+        parameters["limit"] = limit
+
+    elif metric == 'Cosine':
+        string_query = "MATCH (doc:Document)-[:CONTAINS]->(word:Word) " \
+                       "WHERE word.word in ["
+
+        parameters = {}
+        index = 0
+        for word in important_words:
+            index += 1
+            # parameter = "word" + str(index)
+            # parameters[parameter] = word
+            # string_query += "{" + parameter + "}"
+            string_query += "\"" + word + "\""
+            if index < len(important_words):
+                string_query += ", "
+            else:
+                break
+
+        print(initial_word_count)
+        # Returning all documents for which cosine similarity is bigger than threshold
+        string_query += "] " \
+                        "WITH doc.title AS title, COUNT(word) AS number_of_same_words, " \
+                        "doc.number_of_words AS number_of_words " \
+                        "WITH (number_of_same_words * number_of_same_words) / " \
+                        "(toFloat({initial_doc_word_count}) * number_of_words) " \
+                        "AS coefficient, " \
+                        "title, number_of_words, number_of_same_words " \
+                        "WHERE coefficient > toFloat({threshold}) " \
+                        "AND number_of_same_words / toFloat({initial_doc_word_count}) > 1 / toFloat(100) " \
+                        "RETURN title, number_of_words, number_of_same_words, coefficient " \
+                        "ORDER BY coefficient DESC, number_of_same_words DESC " \
+                        "LIMIT {limit}"
+        print(string_query)
+        parameters["initial_doc_word_count"] = initial_word_count
+        parameters["threshold"] = threshold
+        parameters["limit"] = limit
 
     database.open_connection()
     result = database.query(string_query, parameters)  # Return the query result
@@ -68,8 +105,8 @@ def similar_documents(text, limit, threshold=0.3):
 
 
 # This function is helper function which finds similar documents to text if the text is encapsulated in a document
-def similar_documents_to_document(title, limit=20):
-    return similar_documents(get_document_for_title(title).content, limit)
+def similar_documents_to_document(title, limit=20, threshold=0.3, metric='Custom'):
+    return similar_documents(get_document_for_title(title).content, limit, threshold, metric)
 
 
 # This function combines the coefficients of similarity between the text and the returned similar documents

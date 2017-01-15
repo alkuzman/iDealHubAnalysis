@@ -72,7 +72,6 @@ def similar_documents(text, limit, threshold=0.3, metric='Custom'):
             else:
                 break
 
-        print(initial_word_count)
         # Returning all documents for which cosine similarity is bigger than threshold
         string_query += "] " \
                         "WITH doc.title AS title, COUNT(word) AS number_of_same_words, " \
@@ -86,10 +85,12 @@ def similar_documents(text, limit, threshold=0.3, metric='Custom'):
                         "RETURN title, number_of_words, number_of_same_words, coefficient " \
                         "ORDER BY coefficient DESC, number_of_same_words DESC " \
                         "LIMIT {limit}"
-        print(string_query)
         parameters["initial_doc_word_count"] = initial_word_count
         parameters["threshold"] = threshold
         parameters["limit"] = limit
+
+    else:
+        print('This metric is not known')
 
     database.open_connection()
     result = database.query(string_query, parameters)  # Return the query result

@@ -83,8 +83,6 @@ def similar_documents(text, limit, threshold=0.3, metric='Custom'):
     else:
         print('This metric is not known')
 
-    print(string_query)
-
     database.open_connection()
     result = database.query(string_query, parameters)  # Return the query result
     database.close_connection()
@@ -111,7 +109,13 @@ def text_popularity_coefficient(text, metric='Cosine'):
     for entry in result:
         coefficient += entry["coefficient"]
 
-    return format(coefficient / len(result), '.4f')
+    length = len(result)
+    if length == 0:
+        return 0.0
+    data = format(coefficient / length, '.4f')
+    print(length)
+    print(data)
+    return data
 
 
 # This function is helper function which finds similar documents to text if the text is encapsulated in a document

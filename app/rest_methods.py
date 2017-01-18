@@ -17,7 +17,7 @@ def popularity_analyzer():
     data = request.data
     text = json.loads(data)
     print(text)
-    return text_popularity_coefficient(text)
+    return text_popularity_coefficient(text, metric='Custom')
 
 
 @rest.route('/analyzers/similarity', methods=['POST'])

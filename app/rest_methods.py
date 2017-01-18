@@ -1,5 +1,7 @@
 from flask import json
 from flask import request
+from flask.json import jsonify
+
 
 from app.analyzers.similar_documents import text_popularity_coefficient
 from app.analyzers.similar_documents import similar_documents
@@ -17,7 +19,7 @@ def popularity_analyzer():
     data = request.data
     text = json.loads(data)
     print(text)
-    return text_popularity_coefficient(text, metric='Custom')
+    return format(text_popularity_coefficient(text), '.4f')
 
 
 @rest.route('/analyzers/similarity', methods=['POST'])
@@ -25,4 +27,8 @@ def similar_documents_analyzer():
     data = request.data
     text = json.loads(data)
     limit = request.args.get("limit")
-    return similar_documents(text, limit)
+    print(text)
+    print(limit)
+    result = similar_documents(text, int(limit), 0)
+    print(result)
+    return jsonify(result)

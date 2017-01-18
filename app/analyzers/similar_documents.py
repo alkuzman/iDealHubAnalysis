@@ -112,9 +112,7 @@ def text_popularity_coefficient(text, metric='Cosine'):
     length = len(result)
     if length == 0:
         return 0.0
-    data = format(coefficient / length, '.4f')
-    print(length)
-    print(data)
+    data = coefficient / length
     return data
 
 

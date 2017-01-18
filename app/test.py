@@ -1,6 +1,6 @@
 from flask import Blueprint
-
-from app.analyzers.similar_documents import similar_documents_to_document, document_popularity_coefficient
+from app.database.neo4j_base_service import get_documents_from_database
+from app.analyzers.similar_documents import similar_documents_to_document, document_popularity_coefficient, text_popularity_coefficient
 
 # This file is containing test functions in order to test the analyzers
 
@@ -19,9 +19,9 @@ def start():
     # connect_documents_with_words()
 
     # This function is for testing how similar_documents are found. Metric can be Custom or Cosine
-    result = similar_documents_to_document('Cancer', 100, 0.05, "Cosine")
-    for record in result:
-        print(record)
+    # result = similar_documents_to_document('Cancer', 100, 0.05, "Cosine")
+    # for record in result:
+    #    print(record)
 
     # This function returns how much a document is popular in the database
     # print(document_popularity_coefficient('Cancer', 'Cosine'))
@@ -48,5 +48,22 @@ def start():
     # Metrics that can be chosen are Cosine, Euclid, Jaccard or Custom
     # print(document_similarity_coefficient('Cancer', 'Genetics'))
 
+    maxPopularity()
+
+
+
+
+def maxPopularity():
+    documents = get_documents_from_database()
+    max_popularity = 0
+    counter = 0
+    for document in documents:
+        text_popularity = text_popularity_coefficient(document.content)
+        counter += 1
+        if max_popularity < text_popularity:
+            max_popularity = text_popularity
+        print(str(max_popularity) + " " + str(counter))
+
+    print(max_popularity)
 
 start()

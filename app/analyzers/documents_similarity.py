@@ -56,7 +56,6 @@ def text_similarity_euclid(vector1, vector2):
     distance = sqrt(sum(pow(a - b, 2) for a, b in zip(vector1, vector2)))
     if distance == 0:
         return 1
-    print(e)
     return 1 / (1 + distance)
 
 

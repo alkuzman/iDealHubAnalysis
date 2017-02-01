@@ -3,6 +3,7 @@ from app.database.database import database
 from app.database.neo4j_base_service import get_words_from_database, get_document_for_title
 from stop_words import get_stop_words
 
+max_similarity = 0.08582799670828715
 
 # This function returns all documents that are similar to the text given as input,
 # together with the coefficient of similarity between the returned document and the text
@@ -113,7 +114,10 @@ def text_popularity_coefficient(text, metric='Cosine'):
     if length == 0:
         return 0.0
     data = coefficient / length
-    return data
+    popularity = data / max_similarity
+    if popularity > 1:
+        return 1
+    return popularity
 
 
 # This function is helper function which finds similar documents to text if the text is encapsulated in a document

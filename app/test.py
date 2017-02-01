@@ -1,7 +1,7 @@
 from flask import Blueprint
 from app.database.neo4j_base_service import get_documents_from_database
 from app.analyzers.similar_documents import similar_documents_to_document, document_popularity_coefficient, text_popularity_coefficient
-
+from app.analyzers.documents_similarity import document_similarity_coefficient
 # This file is containing test functions in order to test the analyzers
 
 test = Blueprint("test", __name__)
@@ -46,9 +46,12 @@ def start():
 
     # This function returns coefficient of similarity between two documents for different metrics.
     # Metrics that can be chosen are Cosine, Euclid, Jaccard or Custom
-    # print(document_similarity_coefficient('Cancer', 'Genetics'))
+    #print(document_similarity_coefficient('Cancer', 'Genetics', metric='Cosine'))
+    #print(document_similarity_coefficient('Cancer', 'Genetics', metric='Euclid'))
+    #print(document_similarity_coefficient('Cancer', 'Genetics', metric="Jaccard"))
+    #print(document_similarity_coefficient('Cancer', 'Genetics'))
 
-    maxPopularity()
+    #maxPopularity()
 
 
 

@@ -2,19 +2,26 @@ from flask import json
 from flask import request
 from flask.json import jsonify
 
+import jsonpickle
 
+from app.analyzers.idea.idea_analyzer import IdeaAnalyzer
 from app.analyzers.similar_documents import text_popularity_coefficient
 from app.analyzers.similar_documents import similar_documents
 from flask import Blueprint
 
+from app.model.idea import Idea
+from app.model.problem import Problem
+
+idea_analyzer = IdeaAnalyzer()
 rest = Blueprint("rest", __name__)
+
 
 @rest.route('/hello')
 def hello_world():
     return 'Hello World'
 
 
-@rest.route('/analyzers/popularity', methods=['POST'])
+@rest.route('/processing/analyzers/popularity', methods=['POST'])
 def popularity_analyzer():
     data = request.data
     text = json.loads(data)
@@ -22,7 +29,7 @@ def popularity_analyzer():
     return format(text_popularity_coefficient(text), '.4f')
 
 
-@rest.route('/analyzers/similarity', methods=['POST'])
+@rest.route('/processing/analyzers/similarity', methods=['POST'])
 def similar_documents_analyzer():
     data = request.data
     text = json.loads(data)
@@ -32,3 +39,48 @@ def similar_documents_analyzer():
     result = similar_documents(text, int(limit), 0)
     print(result)
     return jsonify(result)
+
+
+@rest.route('/api/analyzers/keywords', methods=['POST'])
+def extract_keywords_analyzer():
+    data = request.data
+    request_body = json.loads(data)
+    idea = Idea(**request_body)
+    idea_analysis = idea_analyzer.analyze_idea(idea)
+    return jsonpickle.encode(idea_analysis)
+
+
+@rest.route('/processing/analyzers/idea', methods=['POST'])
+def analyze_idea():
+    data = request.data
+    request_body = json.loads(data)
+    validate_idea(request_body)
+    idea = Idea(**request_body)
+    idea.problem = Problem(**idea.problem)
+    idea_analysis = idea_analyzer.analyze_idea(idea)
+    return jsonpickle.encode(idea_analysis)
+
+
+@rest.route('/processing/analyzers/problem', methods=["POST"])
+def analyze_problem():
+    data = request.data
+    request_body = json.loads(data)
+    validate_problem(request_body)
+    problem = Problem(**request_body)
+    idea_analysis = idea_analyzer.analyze_problem(problem)
+    return jsonpickle.encode(idea_analysis)
+
+
+def validate_document(document: dict):
+    document["title"] = document.get("title", "")
+    document["text"] = document.get("text", "")
+
+
+def validate_problem(problem: dict):
+    validate_document(problem)
+
+
+def validate_idea(idea: dict):
+    validate_document(idea)
+    idea["snackPeak"] = idea.get("snackPeak", "")
+    validate_problem(idea.get("problem", {}))

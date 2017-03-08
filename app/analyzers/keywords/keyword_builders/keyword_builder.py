@@ -7,6 +7,7 @@ class Keyword(object):
     def __init__(self, phrase: str, score: float):
         self.phrase = phrase
         self.score = score
+        self.type = "Keyword"
 
     def __hash__(self):
         return hash(self.phrase)

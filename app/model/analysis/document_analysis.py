@@ -9,5 +9,4 @@ class DocumentAnalysis(object):
         self.keywords = keywords
 
     def __repr__(self):
-        d = self.__dict__
         return json.dumps(self.__dict__, default=ComplexEncoder)

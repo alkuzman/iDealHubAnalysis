@@ -67,8 +67,8 @@ def analyze_problem():
     request_body = json.loads(data)
     validate_problem(request_body)
     problem = Problem(**request_body)
-    idea_analysis = idea_analyzer.analyze_problem(problem)
-    return jsonpickle.encode(idea_analysis)
+    problem_analysis = idea_analyzer.analyze_problem(problem)
+    return jsonpickle.encode(problem_analysis)
 
 
 def validate_document(document: dict):

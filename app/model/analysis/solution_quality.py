@@ -1,3 +1,5 @@
 class SolutionQuality:
-    def __init__(self, status: int):
-        self.status = status
+    def __init__(self):
+        self.problemCoverage = None
+        self.snackPeakQuality = None
+        self.type = "SolutionQuality"

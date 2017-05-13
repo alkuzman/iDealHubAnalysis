@@ -1,5 +1,6 @@
 import copy
 
+from app.analyzers.keywords.keyword_builders.keyword_builder import Keywords
 from app.analyzers.keywords.keyword_extractor import KeywordExtractor
 from app.model.analysis.idea_analysis import IdeaAnalysis
 from app.model.analysis.problem_analysis import ProblemAnalysis
@@ -15,9 +16,8 @@ class IdeaAnalyzer(object):
         self.keyword_extractor = KeywordExtractor()
 
     def analyze_idea(self, idea: Idea) -> IdeaAnalysis:
-        texts = [(idea.title, 3), (idea.snackPeak, 2), (idea.text, 1)]
         problem_analysis = self.analyze_problem(idea.problem)
-        idea_analysis = IdeaAnalysis(self.keyword_extractor.extract_keywords_for_text(texts),
+        idea_analysis = IdeaAnalysis(self.get_idea_keywords(idea),
                                      problem_analysis)
         solution_quality = SolutionQuality()
         solution_quality.problemCoverage = IdeaAnalyzer.problem_coverage(idea_analysis)
@@ -26,8 +26,7 @@ class IdeaAnalyzer(object):
         return idea_analysis
 
     def analyze_problem(self, problem: Problem) -> ProblemAnalysis:
-        texts = [(problem.title, 2), (problem.text, 1)]
-        problem_analysis = ProblemAnalysis(self.keyword_extractor.extract_keywords_for_text(texts))
+        problem_analysis = ProblemAnalysis(self.get_problem_keywords(problem))
         return problem_analysis
 
     @staticmethod
@@ -87,3 +86,15 @@ class IdeaAnalyzer(object):
         if quality > 1:
             status = True
         return SnackPeakQuality(status, quality)
+
+    def get_idea_keywords(self, idea: Idea) -> Keywords:
+        texts = [(idea.title, 3), (idea.snackPeak, 2), (idea.text, 1)]
+        return self.keyword_extractor.extract_keywords_for_text(texts)
+
+    def get_problem_keywords(self, problem: Problem) -> Keywords:
+        texts = texts = [(problem.title, 2), (problem.text, 1)]
+        return self.keyword_extractor.extract_keywords_for_text(texts)
+
+    def get_solution_quality(self, idea: Idea) -> SolutionQuality:
+        idea_analysis = self.analyze_idea(idea)
+        return idea_analysis.solutionQuality

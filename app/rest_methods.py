@@ -71,6 +71,38 @@ def analyze_problem():
     return jsonpickle.encode(problem_analysis)
 
 
+@rest.route('/processing/analyzers/idea/keywords', methods=["POST"])
+def idea_keywords():
+    data = request.data
+    request_body = json.loads(data)
+    validate_idea(request_body)
+    idea = Idea(**request_body)
+    idea.problem = Problem(**idea.problem)
+    idea_k = idea_analyzer.get_idea_keywords(idea)
+    return jsonpickle.encode(idea_k)
+
+
+@rest.route('/processing/analyzers/problem/keywords', methods=["POST"])
+def problem_keywords():
+    data = request.data
+    request_body = json.loads(data)
+    validate_problem(request_body)
+    problem = Problem(**request_body)
+    problem_k = idea_analyzer.get_problem_keywords(problem)
+    return jsonpickle.encode(problem_k)
+
+
+@rest.route('/processing/analyzers/solutionQuality', methods=['POST'])
+def solution_quality():
+    data = request.data
+    request_body = json.loads(data)
+    validate_idea(request_body)
+    idea = Idea(**request_body)
+    idea.problem = Problem(**idea.problem)
+    idea_analysis = idea_analyzer.get_solution_quality(idea)
+    return jsonpickle.encode(idea_analysis)
+
+
 def validate_document(document: dict):
     document["title"] = document.get("title", "")
     document["text"] = document.get("text", "")

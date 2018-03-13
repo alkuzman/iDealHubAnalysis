@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package api.model;
+
+message Viki {
+    string title = 1;
+    string text = 2;
+}
+
+message Ackicko {
+    string title = 1;
+    string text = 2;
+    string snack_peak = 3;
+    Viki problem = 4;
+}

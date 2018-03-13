@@ -5,3 +5,11 @@ class Document(object):
 
     def __str__(self):
         return "\"" + self.title + "\": " + self.text
+
+    @classmethod
+    def from_dict(cls, d):
+        obj = cls(**d)
+        return obj
+
+    def __init(self, **kwargs):
+        self.__dict__.update(kwargs)

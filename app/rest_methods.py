@@ -1,16 +1,17 @@
+import jsonpickle
+from flask import Blueprint
 from flask import json
 from flask import request
 from flask.json import jsonify
-
-import jsonpickle
+from google.protobuf.json_format import Parse
 
 from app.analyzers.idea.idea_analyzer import IdeaAnalyzer
-from app.analyzers.similar_documents import text_popularity_coefficient
 from app.analyzers.similar_documents import similar_documents
-from flask import Blueprint
-
+from app.analyzers.similar_documents import text_popularity_coefficient
+from app.api_model.generated.api_model_pb2 import Ackicko
 from app.model.idea import Idea
 from app.model.problem import Problem
+from app.utils import convert_input_to, protobuf_to_json, json_to_protobuf
 
 idea_analyzer = IdeaAnalyzer()
 rest = Blueprint("rest", __name__)
@@ -51,12 +52,8 @@ def extract_keywords_analyzer():
 
 
 @rest.route('/processing/analyzers/idea', methods=['POST'])
-def analyze_idea():
-    data = request.data
-    request_body = json.loads(data)
-    validate_idea(request_body)
-    idea = Idea(**request_body)
-    idea.problem = Problem(**idea.problem)
+@convert_input_to(Idea)
+def analyze_idea(idea: Idea):
     idea_analysis = idea_analyzer.analyze_idea(idea)
     return jsonpickle.encode(idea_analysis)
 
@@ -101,6 +98,14 @@ def solution_quality():
     idea.problem = Problem(**idea.problem)
     idea_analysis = idea_analyzer.get_solution_quality(idea)
     return jsonpickle.encode(idea_analysis)
+
+
+@rest.route('/ackicko', methods=['POST'])
+@protobuf_to_json
+@json_to_protobuf(Ackicko)
+def ackicko(acko: Ackicko) -> Ackicko:
+    print(acko)
+    return acko
 
 
 def validate_document(document: dict):

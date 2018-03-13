@@ -5,6 +5,7 @@ from stop_words import get_stop_words
 
 max_similarity = 0.08582799670828715
 
+
 # This function returns all documents that are similar to the text given as input,
 # together with the coefficient of similarity between the returned document and the text
 def similar_documents(text, limit, threshold=0.3, metric='Custom'):

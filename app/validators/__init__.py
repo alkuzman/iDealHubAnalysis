@@ -1,0 +1,4 @@
+from app.validation import validator_registry
+from app.validators.analysis_request_validator import AnalysisRequestValidator
+
+validator_registry.register(AnalysisRequestValidator())

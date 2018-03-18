@@ -3,15 +3,14 @@ from flask import Blueprint
 from flask import json
 from flask import request
 from flask.json import jsonify
-from google.protobuf.json_format import Parse
 
 from app.analyzers.idea.idea_analyzer import IdeaAnalyzer
 from app.analyzers.similar_documents import similar_documents
 from app.analyzers.similar_documents import text_popularity_coefficient
-from app.api_model.generated.api_model_pb2 import Ackicko
+from app.api_model.generated.api_model_pb2 import AnalysisRequest
 from app.model.idea import Idea
 from app.model.problem import Problem
-from app.utils import convert_input_to, protobuf_to_json, json_to_protobuf
+from app.rest_decorators import convert_input_to, protobuf_to_json, json_to_protobuf, validate
 
 idea_analyzer = IdeaAnalyzer()
 rest = Blueprint("rest", __name__)
@@ -100,12 +99,12 @@ def solution_quality():
     return jsonpickle.encode(idea_analysis)
 
 
-@rest.route('/ackicko', methods=['POST'])
+@rest.route('/processing/analyzer', methods=['POST'])
 @protobuf_to_json
-@json_to_protobuf(Ackicko)
-def ackicko(acko: Ackicko) -> Ackicko:
-    print(acko)
-    return acko
+@json_to_protobuf(AnalysisRequest)
+@validate
+def ackicko(analysis_request: AnalysisRequest) -> AnalysisRequest:
+    return analysis_request
 
 
 def validate_document(document: dict):

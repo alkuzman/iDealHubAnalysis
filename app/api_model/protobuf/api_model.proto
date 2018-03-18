@@ -1,15 +1,85 @@
-syntax = "proto3";
+syntax = "proto2";
 
-package api.model;
+package app.api_model;
 
-message Viki {
-    string title = 1;
-    string text = 2;
+/*
+    This message reperents one data entry wich can be anything that is supported on the web
+    Currentrly we support only plain text and html`
+*/
+message Data {
+    required string id = 1; //  Main identificator of the data, it should be unique within one message
+    required string content_type = 2; //  Type of the content. It can be anything that is supported by the web
+    required string content = 3; //  Actual content which is processed according to the content type
 }
 
-message Ackicko {
-    string title = 1;
-    string text = 2;
-    string snack_peak = 3;
-    Viki problem = 4;
+/*
+    This message is only reference to the data. It contains id of the data message and boost which
+    is relative representation of the relativeness of that data in comparison with others
+*/
+message DataReference {
+    required string data_id = 3;
+    optional double boost = 4 [default = 1];
+}
+
+/*
+    The Document message represents collection of multiple data messages (it actually contains DataReferences) with
+    boosts.
+*/
+message Document {
+    required string id = 1; //  Main identificator of documents, should be uniqe in one message
+    repeated DataReference data_references = 2; //  References to the data
+}
+
+/*
+    This is request for keyword analysis. It only references the document for which the analysis should be made.
+*/
+message KeywordAnalysisRequest {
+    required string document_id = 1; //  References the document. This id should appear in document list.
+}
+
+/*
+    This is request for coverage analysis. It contains references to the covered document which containts data which
+    should be covered by the cover document, and the reference to the documents which contains the cover
+    of the covered document.
+
+    In most cases cover document is bigger document which can contain more information but should also contain
+    the information which is mentioned or reference in covered document.
+*/
+message CoverageAnalysisRequest {
+    required string covered_document_id = 1; //  References the document which has the covered content. This id should appear in document list.
+    required string cover_document_id = 2; //  References the document which has the cover content . This id should appear in document list.
+}
+
+/*
+    This is the request for sneak peak quality analysis. It contains references to the main document,
+    and sneak peak document.
+
+    In most cases main document is biger and contains more information. But sneak peak document should contain
+    only the main topics of the main document.
+*/
+message SneakPeekAnalysisRequest {
+    required string sneak_peek_document_id = 1; //  References the document which has the short desctiption content. This id should appear in document list.
+    required string main_document_id = 2; //  References the document which has the main content. This id should appear in document list.
+}
+
+/*
+    This message represents one request for analysis. Data on which analysis should be made,
+    and different requests for analysis.
+*/
+message AnalysisRequest {
+    repeated Data data = 1;
+    repeated Document documents = 2;
+    repeated KeywordAnalysisRequest keyword_analysis_requests = 3;
+    repeated CoverageAnalysisRequest coverage_analysis_requests = 4;
+    repeated SneakPeekAnalysisRequest sneak_peek_analysis_requests = 5;
+}
+
+// ####################################### ERRORS ####################################
+message IdValidationError {
+    required string id = 1;
+}
+
+message IdReferenceValidationError {
+    required string id = 1;
+    repeated string present_ids = 2;
 }

@@ -4,21 +4,19 @@ from flask import json
 from flask import request
 from flask.json import jsonify
 
+from app.analyzers import analyzer
 from app.analyzers.idea.idea_analyzer import IdeaAnalyzer
 from app.analyzers.similar_documents import similar_documents
 from app.analyzers.similar_documents import text_popularity_coefficient
-from app.api_model.generated.api_model_pb2 import AnalysisRequest
+from app.api_model.builders.api_analysis_response_builder import ApiAnalysisResponseBuilder
+from app.api_model.generated.api_model_pb2 import AnalysisRequest, AnalysisResponse
+from app.model.analysis.request.adapters.api.analysis_request_set_api_adapter import AnalysisRequestSetApiAdapter
 from app.model.idea import Idea
 from app.model.problem import Problem
 from app.rest_decorators import convert_input_to, protobuf_to_json, json_to_protobuf, validate
 
 idea_analyzer = IdeaAnalyzer()
 rest = Blueprint("rest", __name__)
-
-
-@rest.route('/hello')
-def hello_world():
-    return 'Hello World'
 
 
 @rest.route('/processing/analyzers/popularity', methods=['POST'])
@@ -41,6 +39,7 @@ def similar_documents_analyzer():
     return jsonify(result)
 
 
+@DeprecationWarning
 @rest.route('/api/analyzers/keywords', methods=['POST'])
 def extract_keywords_analyzer():
     data = request.data
@@ -50,6 +49,7 @@ def extract_keywords_analyzer():
     return jsonpickle.encode(idea_analysis)
 
 
+@DeprecationWarning
 @rest.route('/processing/analyzers/idea', methods=['POST'])
 @convert_input_to(Idea)
 def analyze_idea(idea: Idea):
@@ -57,6 +57,7 @@ def analyze_idea(idea: Idea):
     return jsonpickle.encode(idea_analysis)
 
 
+@DeprecationWarning
 @rest.route('/processing/analyzers/problem', methods=["POST"])
 def analyze_problem():
     data = request.data
@@ -67,6 +68,7 @@ def analyze_problem():
     return jsonpickle.encode(problem_analysis)
 
 
+@DeprecationWarning
 @rest.route('/processing/analyzers/idea/keywords', methods=["POST"])
 def idea_keywords():
     data = request.data
@@ -78,6 +80,7 @@ def idea_keywords():
     return jsonpickle.encode(idea_k)
 
 
+@DeprecationWarning
 @rest.route('/processing/analyzers/problem/keywords', methods=["POST"])
 def problem_keywords():
     data = request.data
@@ -88,6 +91,7 @@ def problem_keywords():
     return jsonpickle.encode(problem_k)
 
 
+@DeprecationWarning
 @rest.route('/processing/analyzers/solutionQuality', methods=['POST'])
 def solution_quality():
     data = request.data
@@ -99,24 +103,37 @@ def solution_quality():
     return jsonpickle.encode(idea_analysis)
 
 
-@rest.route('/processing/analyzer', methods=['POST'])
-@protobuf_to_json
-@json_to_protobuf(AnalysisRequest)
-@validate
-def ackicko(analysis_request: AnalysisRequest) -> AnalysisRequest:
-    return analysis_request
-
-
+@DeprecationWarning
 def validate_document(document: dict):
     document["title"] = document.get("title", "")
     document["text"] = document.get("text", "")
 
 
+@DeprecationWarning
 def validate_problem(problem: dict):
     validate_document(problem)
 
 
+@DeprecationWarning
 def validate_idea(idea: dict):
     validate_document(idea)
     idea["snackPeak"] = idea.get("snackPeak", "")
     validate_problem(idea.get("problem", {}))
+
+
+@rest.route('/processing/analyzer', methods=['POST'])
+@protobuf_to_json
+@json_to_protobuf(AnalysisRequest)
+@validate
+def analyze(analysis_request: AnalysisRequest) -> AnalysisResponse:
+    # Convert to internal model analysis request
+    analysis_request_set = AnalysisRequestSetApiAdapter(analysis_request)
+
+    # Analyze the request and write the response in analysis variable
+    analysis = analyzer.analyze(analysis_request_set)
+
+    # Build the analysis response (which is defined by the API model
+    api_analysis_response_builder = ApiAnalysisResponseBuilder(analysis_request, analysis)
+    analysis_response = api_analysis_response_builder.build()
+
+    return analysis_response

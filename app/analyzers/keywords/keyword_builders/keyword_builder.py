@@ -1,22 +1,25 @@
-from typing import Dict, Tuple, List
+from typing import Dict, List
+
+from app.model.keyword.keyword import Keyword
 
 WordScores = Dict[str, float]
 
 
-class Keyword(object):
+class KeywordImpl(Keyword):
+
     def __init__(self, phrase: str, score: float):
         self.phrase = phrase
         self.score = score
         self.type = "Keyword"
 
-    def __hash__(self):
-        return hash(self.phrase)
+    def get_phrase(self) -> str:
+        return self.phrase
 
-    def __eq__(self, other):
-        return self.phrase.lower() == other.phrase.lower()
+    def get_score(self) -> float:
+        return self.score
 
 
-Keywords = List[Keyword]
+Keywords = List[KeywordImpl]
 
 
 class KeywordBuilder(object):

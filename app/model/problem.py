@@ -1,4 +1,4 @@
-from app.model.document import Document
+from app.model.document_file import Document
 
 
 class Problem(Document):

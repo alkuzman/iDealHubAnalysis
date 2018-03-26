@@ -1,6 +1,6 @@
 import nltk
 
-from app.analyzers.keywords.keyword_builders.keyword_builder import WordScores, Keywords, Keyword
+from app.analyzers.keywords.keyword_builders.keyword_builder import WordScores, Keywords, KeywordImpl
 from app.analyzers.keywords.keyword_builders.simple_keyword_builder import SimpleKeywordBuilder
 
 my_pos_tags = ["JJ", "NN", "NNP", "JJR", "JJS", "NNS", "NNPS"]
@@ -23,7 +23,7 @@ class PosKeywordBuilder(SimpleKeywordBuilder):
                 score += word_score
             else:
                 if len(words) > 0:
-                    keywords.add(Keyword(" ".join(words), score))
+                    keywords.add(KeywordImpl(" ".join(words), score))
                 words = []
                 score = 0
         keywords_list = list(keywords)

@@ -1,0 +1,8 @@
+from app.utils.data_converters.data_converter_registry import DataConverterRegistry
+from app.utils.data_converters.data_converter_same_content_type_protector import DataConverterSameContentTypeProtector
+from app.utils.data_converters.html_to_text_no_boost_data_converter import HtmlToTextNoBoostDataConverter
+
+no_boost_registry = DataConverterRegistry()
+no_boost_registry.register("application/html", "text/plain", HtmlToTextNoBoostDataConverter())
+
+no_boost_data_converter = DataConverterSameContentTypeProtector(no_boost_registry)

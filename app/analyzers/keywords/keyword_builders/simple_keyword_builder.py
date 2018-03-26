@@ -1,4 +1,4 @@
-from app.analyzers.keywords.keyword_builders.keyword_builder import KeywordBuilder, WordScores, Keywords, Keyword
+from app.analyzers.keywords.keyword_builders.keyword_builder import KeywordBuilder, WordScores, Keywords, KeywordImpl
 
 
 class SimpleKeywordBuilder(KeywordBuilder):
@@ -13,7 +13,7 @@ class SimpleKeywordBuilder(KeywordBuilder):
                 score += word_score
             else:
                 if len(words) > 0:
-                    keywords.add(Keyword(" ".join(words), score))
+                    keywords.add(KeywordImpl(" ".join(words), score))
                 words = []
                 score = 0
         keywords_list = list(keywords)

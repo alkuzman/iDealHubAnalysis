@@ -2,13 +2,15 @@ syntax = "proto2";
 
 package app.api_model;
 
+// ################################## Basic Data ###################################
+
 /*
     This message reperents one data entry wich can be anything that is supported on the web
     Currentrly we support only plain text and html`
 */
 message Data {
     required string id = 1; //  Main identificator of the data, it should be unique within one message
-    required string content_type = 2; //  Type of the content. It can be anything that is supported by the web
+    required string content_type = 2 [default = "text/plain"]; //  Type of the content. It can be anything that is supported by the web
     required string content = 3; //  Actual content which is processed according to the content type
 }
 
@@ -29,6 +31,8 @@ message Document {
     required string id = 1; //  Main identificator of documents, should be uniqe in one message
     repeated DataReference data_references = 2; //  References to the data
 }
+
+// ################################## Requests ###############################
 
 /*
     This is request for keyword analysis. It only references the document for which the analysis should be made.
@@ -72,6 +76,49 @@ message AnalysisRequest {
     repeated KeywordAnalysisRequest keyword_analysis_requests = 3;
     repeated CoverageAnalysisRequest coverage_analysis_requests = 4;
     repeated SneakPeekAnalysisRequest sneak_peek_analysis_requests = 5;
+}
+
+// ################################### Responses ########################################
+
+enum DescriptiveAnalysisScore {
+    PURE = 1;
+    FAIR = 2;
+    GOOD = 3;
+    EXCELLENT = 4;
+}
+
+message Keyword {
+    required string phrase = 1;
+    required double score = 2 [default = 0.0];
+}
+
+message KeywordAnalysisResponse {
+    required string document_id = 1; //  References the document. This id should appear in document list.
+    repeated Keyword keywords = 2;
+}
+
+message CoverageAnalysisResponse {
+    required string covered_document_id = 1; //  References the document which has the covered content. This id should appear in document list.
+    required string cover_document_id = 2; //  References the document which has the cover content . This id should appear in document list.
+    repeated Keyword covered_keywords = 3;
+    repeated Keyword not_covered_keywords = 4;
+    required double coverage = 5 [default = 0.0];
+    required DescriptiveAnalysisScore descriptive_coverage = 6 [default = PURE];
+}
+
+message SneakPeekAnalysisResponse {
+    required string sneak_peek_document_id = 1; //  References the document which has the short desctiption content. This id should appear in document list.
+    required string main_document_id = 2; //  References the document which has the main content. This id should appear in document list.
+    required double quality = 3;
+    required DescriptiveAnalysisScore descriptive_quality = 6 [default = PURE];
+}
+
+message AnalysisResponse {
+    repeated Data data = 1;
+    repeated Document documents = 2;
+    repeated KeywordAnalysisResponse keyword_analysis_responses = 3;
+    repeated CoverageAnalysisResponse coverage_analysis_responses = 4;
+    repeated SneakPeekAnalysisResponse sneak_peek_analysis_responses = 5;
 }
 
 // ####################################### ERRORS ####################################

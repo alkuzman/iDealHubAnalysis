@@ -2,7 +2,7 @@ from app.data_import.topics.topic_reader import TopicReader
 
 
 class WordSimilarity(object):
-    def __init__(self, data_directory: str = "C:/Users/PC/Desktop/Data/iDeal-Hub/Analyzers/Topics/"):
+    def __init__(self, data_directory: str = "C:/Users/aleks/Documents/Data/iDeal-Hub/Analyzers/Topics/"):
         topic_reader = TopicReader(data_directory)
         word_topic_distribution = topic_reader.read_word_topic_distribution()
         self.vocab_dict = topic_reader.read_vocab_dict()

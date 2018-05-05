@@ -121,7 +121,7 @@ def validate_idea(idea: dict):
     validate_problem(idea.get("problem", {}))
 
 
-@rest.route('/processing/analyzer', methods=['POST'])
+@rest.route('/analyzer', methods=['POST'])
 @protobuf_to_json
 @json_to_protobuf(AnalysisRequest)
 @validate

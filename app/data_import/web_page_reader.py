@@ -1,5 +1,3 @@
-from urllib.request import urlopen
-import requests
 import http.client
 
 

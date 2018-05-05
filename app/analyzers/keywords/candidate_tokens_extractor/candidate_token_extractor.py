@@ -1,5 +1,3 @@
-from typing import List, Tuple
-
 from app.analyzers.keywords.keyword_utils import Tokens
 
 

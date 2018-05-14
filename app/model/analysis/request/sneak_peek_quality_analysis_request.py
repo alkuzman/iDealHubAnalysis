@@ -11,28 +11,28 @@ class SneakPeekQualityAnalysisRequest(AnalysisRequest):
     Analysis request for quality of the sneak peek over the main document.
     """
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_sneak_peek(self) -> Document:
         """
         :return: document which is sneak peek in the requested analysis.
             """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_main_document(self) -> Document:
         """
         :return: document which is main document in the requested analysis.
             """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_sneak_peek_keywords(self) -> List[Keyword]:
         """
         :return: list of keywords for the sneak peek.
             """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_main_document_keywords(self) -> List[Keyword]:
         """
         :return: list of keywords for the main document.

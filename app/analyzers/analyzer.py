@@ -6,10 +6,10 @@ from app.model.analysis.response.analysis import Analysis
 
 
 class Analyzer:
-    @abc.abstractclassmethod
+    @classmethod
     def analyze(self, analysis_request: AnalysisRequest) -> List[Analysis]:
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def accepts(self, o: AnalysisRequest) -> bool:
         pass

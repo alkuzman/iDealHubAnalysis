@@ -9,19 +9,19 @@ from app.model.analysis.response.keyword_analysis import KeywordAnalysis
 
 
 class AnalysisRequestSet(AnalysisRequest):
-    @abc.abstractclassmethod
+    @classmethod
     def get_keyword_analysis_requests(self) -> List[KeywordAnalysisRequest]:
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_coverage_analysis_requests(self) -> List[CoverageAnalysisRequest]:
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_sneak_peak_quality_analysis_requests(self) -> List[SneakPeekQualityAnalysisRequest]:
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def set_keyword_analysis(self, keyword_analysis: List[KeywordAnalysis]):
         pass
 

@@ -11,7 +11,7 @@ class CoverageAnalysis(ScoreAnalysis):
     Coverage analysis for given pair of documents
     """
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_cover(self) -> Document:
         """
 
@@ -19,7 +19,7 @@ class CoverageAnalysis(ScoreAnalysis):
         """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_covered(self) -> Document:
         """
 
@@ -27,14 +27,14 @@ class CoverageAnalysis(ScoreAnalysis):
         """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_covered_keywords(self) -> List[Keyword]:
         """
         :return: list of keywords in the covered documents which are also in the cover document.
             """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_not_covered_keywords(self) -> List[Keyword]:
         """
         :return: list of keywords in the covered document which are not in cover document.

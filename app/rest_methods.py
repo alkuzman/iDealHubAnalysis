@@ -129,8 +129,12 @@ def analyze(analysis_request: AnalysisRequest) -> AnalysisResponse:
     # Convert to internal model analysis request
     analysis_request_set = AnalysisRequestSetApiAdapter(analysis_request)
 
+    print(len(analysis_request_set.get_keyword_analysis_requests()))
+
     # Analyze the request and write the response in analysis variable
     analysis = analyzer.analyze(analysis_request_set)
+
+    print(analysis)
 
     # Build the analysis response (which is defined by the API model
     api_analysis_response_builder = ApiAnalysisResponseBuilder(analysis_request, analysis)

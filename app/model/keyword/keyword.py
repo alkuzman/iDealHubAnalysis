@@ -6,14 +6,14 @@ class Keyword(metaclass=abc.ABCMeta):
     Keyword is any textual phrase assigned with score
     """
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_phrase(self) -> str:
         """
         :return: textual phrase of the keyword.
             """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_score(self) -> float:
         """
         :return: document which should be anticipated as cover for requested analysis.
@@ -32,6 +32,8 @@ class Keyword(metaclass=abc.ABCMeta):
             return False
         if not isinstance(other, Keyword):
             return False
-        if self.get_id() is None:
+        if self.get_phrase() is None:
+            return False
+        if self.get_score() is None:
             return False
         return self.get_phrase().lower() == other.get_phrase().lower()

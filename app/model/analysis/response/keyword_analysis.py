@@ -11,14 +11,14 @@ class KeywordAnalysis(Analysis):
     Keyword analysis for given document
     """
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_document(self) -> Document:
         """
         :return: document for which the keyword analysis is done
             """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_keywords(self) -> List[Keyword]:
         """
             :return: list of keywords for the document of this analysis

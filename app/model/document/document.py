@@ -9,7 +9,7 @@ class Document(metaclass=abc.ABCMeta):
     This object represents textual document which is composition of multiple data parts which are plain
     texts with boost factor.
     """
-    @abc.abstractclassmethod
+    @classmethod
     def get_data(self) -> List[Data]:
         """
         Get data objects which are part of the document composition.
@@ -17,7 +17,7 @@ class Document(metaclass=abc.ABCMeta):
         """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_id(self) -> str:
         """
                Get the unique identifier of this object. Any object which is instance of Document and which has

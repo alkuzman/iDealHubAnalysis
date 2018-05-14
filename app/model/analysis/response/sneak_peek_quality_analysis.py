@@ -10,7 +10,7 @@ class SneakPeekQualityAnalysis(ScoreAnalysis):
     Sneak peek quality analysis for given pair of documents
     """
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_sneak_peek(self) -> Document:
         """
 
@@ -18,7 +18,7 @@ class SneakPeekQualityAnalysis(ScoreAnalysis):
         """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_main_document(self) -> Document:
         """
 

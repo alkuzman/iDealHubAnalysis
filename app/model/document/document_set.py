@@ -7,7 +7,7 @@ class DocumentSet(metaclass=abc.ABCMeta):
     """
     This is set of documents
     """
-    @abc.abstractclassmethod
+    @classmethod
     def get_document(self, document_id) -> Document:
         """
 

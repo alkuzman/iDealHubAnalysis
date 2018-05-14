@@ -11,28 +11,28 @@ class CoverageAnalysisRequest(AnalysisRequest):
     Analysis request for coverage factor for one document over the other.
     """
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_cover(self) -> Document:
         """
         :return: document which should be anticipated as cover for requested analysis.
             """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_covered(self) -> Document:
         """
         :return: document which should be anticipated as covered document for requested analysis.
             """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_cover_keywords(self) -> List[Keyword]:
         """
         :return: list of keywords for the cover document.
             """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_covered_keywords(self) -> List[Keyword]:
         """
         :return: list of keywords for covered document.

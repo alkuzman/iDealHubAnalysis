@@ -9,7 +9,7 @@ class Analysis(metaclass=abc.ABCMeta):
     One analysis for given list of documents
     """
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_documents(self) -> List[Document]:
         """
         List of documents of the analysis.

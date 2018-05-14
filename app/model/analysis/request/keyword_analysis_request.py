@@ -10,7 +10,7 @@ class KeywordAnalysisRequest(AnalysisRequest):
     Analysis request for keywords for one document
     """
 
-    @abc.abstractclassmethod
+    @classmethod
     def get_document(self) -> Document:
         """
         :return: document for which keyword analysis are requested.

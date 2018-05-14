@@ -9,7 +9,7 @@ class DataConverter(metaclass=abc.ABCMeta):
     """
     This is converter of data
     """
-    @abc.abstractclassmethod
+    @classmethod
     def convert(self, data: Data, from_content_type: str, to_content_type: str) -> List[Data]:
         """
         Convert of the data can result in multiple chunks of data

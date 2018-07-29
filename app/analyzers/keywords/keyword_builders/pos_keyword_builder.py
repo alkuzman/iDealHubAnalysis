@@ -1,14 +1,9 @@
-import nltk
-
 from app.analyzers.keywords.keyword_builders.keyword_builder import WordScores, Keywords, KeywordImpl
 from app.analyzers.keywords.keyword_builders.simple_keyword_builder import SimpleKeywordBuilder
 
-my_pos_tags = ["JJ", "NN", "NNP", "JJR", "JJS", "NNS", "NNPS"]
-my_min_word_score = 0.5
-
 
 class PosKeywordBuilder(SimpleKeywordBuilder):
-    def __init__(self, pos_tags: [] = my_pos_tags, min_word_score: float = my_min_word_score):
+    def __init__(self, pos_tags: [], min_word_score: float):
         self.pos_tags = pos_tags
         self.min_word_score = min_word_score
 

@@ -4,8 +4,8 @@ from app.data_import.topics.word_similarity import WordSimilarity
 
 
 class TopicSimilarityWeightCalculator(RelationWeightCalculator):
-    def __init__(self, min_similarity: int = 0.5):
-        self.word_similarity = WordSimilarity()
+    def __init__(self, min_similarity: int, word_similarity: WordSimilarity):
+        self.word_similarity = word_similarity
         self.min_similarity = min_similarity
 
     def calculate(self, token_1: Token, token_2: Token) -> float:

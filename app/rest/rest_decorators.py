@@ -32,9 +32,9 @@ def protobuf_to_json(func):
     def wrapper(*args, **kwargs):
         o = func(*args, **kwargs)
         if isinstance(o, Response):
-            message = MessageToJson(o.response, including_default_value_fields=True)
+            message = MessageToJson(o.response, including_default_value_fields=True, use_integers_for_enums=True)
             return Response(message, status=o.status, mimetype=o.mimetype)
-        return MessageToJson(o, including_default_value_fields=True)
+        return MessageToJson(o, including_default_value_fields=True, use_integers_for_enums=True)
     return wrapper
 
 

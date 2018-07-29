@@ -1,17 +1,15 @@
 import copy
-
 from typing import List
 
 from app.analyzers.analyzer import Analyzer
-from app.model.analysis.request.analysis_request import AnalysisRequest
 from app.model.analysis.request.coverage_analysis_request import CoverageAnalysisRequest
-from app.model.analysis.response.analysis import Analysis
+from app.model.analysis.response.coverage_analysis import CoverageAnalysis
 from app.model.analysis.response.descriptive_analysis_score import DescriptiveAnalysisScore
 from app.model.analysis.response.impl.coverage_analysis_impl import CoverageAnalysisImpl
 
 
-class CoverageAnalyzer(Analyzer):
-    def analyze(self, analysis_request: CoverageAnalysisRequest) -> List[Analysis]:
+class CoverageAnalyzer(Analyzer[CoverageAnalysisRequest, CoverageAnalysis]):
+    def analyze(self, analysis_request: CoverageAnalysisRequest) -> List[CoverageAnalysis]:
         base_keywords = analysis_request.get_covered_keywords()
         cover_keywords = analysis_request.get_cover_keywords()
         number_of_common_keywords = 0
@@ -44,5 +42,5 @@ class CoverageAnalyzer(Analyzer):
                                                 covered_keywords, not_covered_keywords, coverage, score)
         return [problem_coverage]
 
-    def accepts(self, o: AnalysisRequest) -> bool:
+    def accepts(self, o: CoverageAnalysisRequest) -> bool:
         return isinstance(o, CoverageAnalysisRequest)

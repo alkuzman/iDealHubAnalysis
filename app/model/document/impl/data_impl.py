@@ -15,3 +15,6 @@ class DataImpl(Data):
 
     def get_id(self) -> str:
         return self.identifier
+
+    def __reduce__(self):
+        return (self.__class__, (self.identifier, self.content, self.boost))

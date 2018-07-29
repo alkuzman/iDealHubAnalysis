@@ -4,8 +4,13 @@ from app.analyzers.keywords.relation_weight_calculator.relation_weight_calculato
 
 
 class CombinedWeightCalculator(RelationWeightCalculator):
-    def __init__(self, calculators: RelationWeightCalculators):
-        self.calculators = calculators
+    def __init__(self, *args, **kwargs):
+        self.calculators: RelationWeightCalculators = []
+        for arg in args:
+            self.calculators.append(arg)
+
+        for arg in kwargs:
+            self.calculators.append(kwargs[arg])
 
     def calculate(self, token_1: Token, token_2: Token) -> float:
         weight = 0.0

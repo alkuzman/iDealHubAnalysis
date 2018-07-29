@@ -10,7 +10,7 @@ WordSimilarityDictionary = Dict[FrozenSet, float]
 
 
 class TopicReader(object):
-    def __init__(self, data_directory: str = "C:/Users/aleks/Documents/Data/iDeal-Hub/Analyzers/Topics/"):
+    def __init__(self, data_directory: str):
         self.data_directory = data_directory
 
     def read_vocab(self) -> Vocab:

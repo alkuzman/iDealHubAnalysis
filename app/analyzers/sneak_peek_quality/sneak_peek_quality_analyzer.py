@@ -1,15 +1,14 @@
 from typing import List
 
 from app.analyzers.analyzer import Analyzer
-from app.model.analysis.request.analysis_request import AnalysisRequest
 from app.model.analysis.request.sneak_peek_quality_analysis_request import SneakPeekQualityAnalysisRequest
-from app.model.analysis.response.analysis import Analysis
 from app.model.analysis.response.descriptive_analysis_score import DescriptiveAnalysisScore
 from app.model.analysis.response.impl.sneak_peek_quality_analysis_impl import SneakPeekQualityAnalysisImpl
+from app.model.analysis.response.sneak_peek_quality_analysis import SneakPeekQualityAnalysis
 
 
-class SneakPeekQualityAnalyzer(Analyzer):
-    def analyze(self, analysis_request: SneakPeekQualityAnalysisRequest) -> List[Analysis]:
+class SneakPeekQualityAnalyzer(Analyzer[SneakPeekQualityAnalysisRequest, SneakPeekQualityAnalysis]):
+    def analyze(self, analysis_request: SneakPeekQualityAnalysisRequest) -> List[SneakPeekQualityAnalysis]:
         text_keywords = analysis_request.get_main_document_keywords()
         snack_peak_keywords = analysis_request.get_sneak_peek_keywords()
         text_keywords_length = len(text_keywords)
@@ -38,5 +37,5 @@ class SneakPeekQualityAnalyzer(Analyzer):
         return [SneakPeekQualityAnalysisImpl(analysis_request.get_sneak_peek(), analysis_request.get_main_document(),
                                              quality, score)]
 
-    def accepts(self, o: AnalysisRequest) -> bool:
+    def accepts(self, o: SneakPeekQualityAnalysisRequest) -> bool:
         return isinstance(o, SneakPeekQualityAnalysisRequest)

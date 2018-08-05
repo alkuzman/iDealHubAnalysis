@@ -11,9 +11,11 @@ Currently this project is in its early stages and it offers the following analys
 
 <h1>Configuration</h1>
 You only have to configure 1 required enviroinment property:
-<p>
-TOPICS_DIRECTORY (path to the directory)
-</p>
+<ul>
+  <li>
+    TOPICS_DIRECTORY (path to the directory)
+  </li>
+</ul>
 
 If you want you application to be secure:
 - APP_SSL_CERTIFICATE (file path)

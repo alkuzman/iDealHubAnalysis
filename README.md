@@ -23,5 +23,4 @@ Other properties:
 - APP_ANALYZER_THREAD_POOL_SIZE (number of threads)
 
 <h1>Authors</h1>
-- Aleksandar Kuzmanoski
-- Viki Peeva
+Aleksandar Kuzmanoski, Viki Peeva

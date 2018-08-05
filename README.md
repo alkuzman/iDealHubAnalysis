@@ -10,12 +10,11 @@ Currently this project is in its early stages and it offers the following analys
 - Sneak peek quality analysis (score of how well one document describes the content of the other document)
 
 <h1>Configuration</h1>
+Here is how and what you can configure the Klupps Analyzer locally.
+
 You only have to configure 1 required enviroinment property:
-<ul>
-  <li>
-    TOPICS_DIRECTORY (path to the directory)
-  </li>
-</ul>
+
+- TOPICS_DIRECTORY (path to the directory)
 
 If you want you application to be secure:
 - APP_SSL_CERTIFICATE (file path)

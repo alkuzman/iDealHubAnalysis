@@ -53,6 +53,7 @@ class SetAnalyzer(Analyzer[AnalysisRequestSet, Analysis]):
 
     def get_keyword_analyses(self, documents: List[Document]) -> Dict[str, List[KeywordAnalysis]]:
         keyword_analysis_dict = {}
+
         future_to_keywords = {self.executor.submit(
             self.get_keyword_analysis,
             document): document.get_id()

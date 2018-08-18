@@ -7,7 +7,7 @@ from app.analyzers.keywords.pos.pos_module import PosModule
 
 @containers.override(KeywordBuilderModule)
 class PosKeywordBuilderModule(containers.DeclarativeContainer):
-    min_word_score = providers.Object(0.5)
+    min_word_score = providers.Object(0.001)
 
     keyword_builder = providers.ThreadSafeSingleton(PosKeywordBuilder,
                                                     pos_tags=PosModule.pos_tags,

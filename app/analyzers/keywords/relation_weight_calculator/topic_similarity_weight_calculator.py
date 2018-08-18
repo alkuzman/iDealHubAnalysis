@@ -1,6 +1,6 @@
 from app.analyzers.keywords.keyword_utils import Token
 from app.analyzers.keywords.relation_weight_calculator.relation_weight_calculator import RelationWeightCalculator
-from app.data_import.topics.word_similarity import WordSimilarity
+from app.analyzers.algorithms.word_similarity.word_similarity import WordSimilarity
 
 
 class TopicSimilarityWeightCalculator(RelationWeightCalculator):

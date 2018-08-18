@@ -6,18 +6,10 @@ from nltk.tokenize import word_tokenize
 
 from app.analyzers.algorithms.page_rank.model.node import PageRankNode
 from app.analyzers.algorithms.page_rank.model.nodes import PageRankNodes
-from app.analyzers.algorithms.page_rank.page_rank import PageRank
 from app.analyzers.keywords.candidate_tokens_extractor.candidate_token_extractor import CandidateTokenExtractor
-from app.analyzers.keywords.candidate_tokens_extractor.pos_candidate_token_extractor import PosCandidateTokenExtractor
 from app.analyzers.keywords.keyword_builders.keyword_builder import Keywords, KeywordBuilder
-from app.analyzers.keywords.keyword_builders.pos_keyword_builder import PosKeywordBuilder
 from app.analyzers.keywords.keyword_utils import KeywordUtils
-from app.analyzers.keywords.relation_weight_calculator.combined_weight_calculator import CombinedWeightCalculator
-from app.analyzers.keywords.relation_weight_calculator.cooccurrence_weight_calculator import \
-    CooccurrenceWeightCalculator
 from app.analyzers.keywords.relation_weight_calculator.relation_weight_calculator import RelationWeightCalculator
-from app.analyzers.keywords.relation_weight_calculator.topic_similarity_weight_calculator import \
-    TopicSimilarityWeightCalculator
 
 NodeToken = Tuple[PageRankNode, int]
 NodeTokens = List[NodeToken]
@@ -43,7 +35,6 @@ class KeywordExtractor(object):
         for text_piece in texts:
             tokens = word_tokenize(text_piece[0])
             pos_tokens_piece = nltk.pos_tag(tokens)
-            print(pos_tokens_piece)
             pos_tokens += pos_tokens_piece
             nodes = self.add_nodes(pos_tokens_piece, text_piece[1])
             node_tokens += nodes
@@ -52,7 +43,6 @@ class KeywordExtractor(object):
 
         self.page_rank.evaluate()
         nodes = self.page_rank.get_nodes()
-        print("Number of nodes: ", len(nodes))
         return self.form_keywords(nodes, pos_tokens)
 
     def add_nodes(self, pos_tokens, initial_score: float = 1) -> NodeTokens:

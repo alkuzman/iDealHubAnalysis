@@ -1,4 +1,4 @@
-import abc
+from abc import abstractmethod
 from typing import List
 
 from app.model.analysis.request.analysis_request import AnalysisRequest
@@ -10,7 +10,7 @@ class KeywordAnalysisRequest(AnalysisRequest):
     Analysis request for keywords for one document
     """
 
-    @classmethod
+    @abstractmethod
     def get_document(self) -> Document:
         """
         :return: document for which keyword analysis are requested.

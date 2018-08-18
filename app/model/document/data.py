@@ -1,11 +1,12 @@
-import abc
+from abc import abstractmethod, ABCMeta
 
 
-class Data(metaclass=abc.ABCMeta):
+class Data(metaclass=ABCMeta):
     """
     This object represents textual data together with boost factor and an id
     """
 
+    @abstractmethod
     def get_content(self) -> str:
         """
         Get textual content of this data piece. The text is plain with no metadata.
@@ -14,6 +15,7 @@ class Data(metaclass=abc.ABCMeta):
             """
         pass
 
+    @abstractmethod
     def get_boost(self) -> float:
         """
         Boost factor for this data object
@@ -22,6 +24,7 @@ class Data(metaclass=abc.ABCMeta):
         """
         pass
 
+    @abstractmethod
     def get_id(self) -> str:
         """
         Get the unique identifier of this object. Any object which is instance of Data and which has

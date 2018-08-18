@@ -47,8 +47,6 @@ class IdeaAnalyzer(object):
             if not_covered:
                 not_covered_keywords.append(copy.copy(keyword))
         length = len(problem_keywords)
-        print("Length: ", length)
-        print("number_of_common_keywords", number_of_common_keywords)
         coverage = 0
         if length != 0:
             coverage = number_of_common_keywords / length

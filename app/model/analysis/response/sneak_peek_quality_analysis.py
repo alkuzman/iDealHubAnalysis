@@ -1,4 +1,4 @@
-import abc
+from abc import abstractmethod
 from typing import List
 
 from app.model.analysis.response.score_analysis import ScoreAnalysis
@@ -10,7 +10,7 @@ class SneakPeekQualityAnalysis(ScoreAnalysis):
     Sneak peek quality analysis for given pair of documents
     """
 
-    @classmethod
+    @abstractmethod
     def get_sneak_peek(self) -> Document:
         """
 
@@ -18,7 +18,7 @@ class SneakPeekQualityAnalysis(ScoreAnalysis):
         """
         pass
 
-    @classmethod
+    @abstractmethod
     def get_main_document(self) -> Document:
         """
 

@@ -1,15 +1,16 @@
-import abc
+from abc import abstractmethod, ABCMeta
 from typing import List
 
 from app.model.document.data import Data
 
 
-class Document(metaclass=abc.ABCMeta):
+class Document(metaclass=ABCMeta):
     """
     This object represents textual document which is composition of multiple data parts which are plain
     texts with boost factor.
     """
-    @classmethod
+
+    @abstractmethod
     def get_data(self) -> List[Data]:
         """
         Get data objects which are part of the document composition.
@@ -17,7 +18,7 @@ class Document(metaclass=abc.ABCMeta):
         """
         pass
 
-    @classmethod
+    @abstractmethod
     def get_id(self) -> str:
         """
                Get the unique identifier of this object. Any object which is instance of Document and which has

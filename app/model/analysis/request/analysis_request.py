@@ -1,15 +1,15 @@
-import abc
+from abc import abstractmethod, ABCMeta
 from typing import List
 
 from app.model.document.document import Document
 
 
-class AnalysisRequest(metaclass=abc.ABCMeta):
+class AnalysisRequest(metaclass=ABCMeta):
     """
     One request for analysis for given list of documents
     """
 
-    @classmethod
+    @abstractmethod
     def get_documents(self) -> List[Document]:
         """
         List of documents for which analysis is requested.

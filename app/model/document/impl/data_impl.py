@@ -17,4 +17,4 @@ class DataImpl(Data):
         return self.identifier
 
     def __reduce__(self):
-        return (self.__class__, (self.identifier, self.content, self.boost))
+        return self.__class__, (self.identifier, self.content, self.boost)

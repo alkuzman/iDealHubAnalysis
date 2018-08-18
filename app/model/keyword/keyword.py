@@ -1,19 +1,19 @@
-import abc
+from abc import abstractmethod, ABCMeta
 
 
-class Keyword(metaclass=abc.ABCMeta):
+class Keyword(metaclass=ABCMeta):
     """
     Keyword is any textual phrase assigned with score
     """
 
-    @classmethod
+    @abstractmethod
     def get_phrase(self) -> str:
         """
         :return: textual phrase of the keyword.
             """
         pass
 
-    @classmethod
+    @abstractmethod
     def get_score(self) -> float:
         """
         :return: document which should be anticipated as cover for requested analysis.

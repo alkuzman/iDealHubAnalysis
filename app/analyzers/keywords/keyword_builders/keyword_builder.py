@@ -1,3 +1,4 @@
+from abc import ABCMeta, abstractmethod
 from typing import Dict, List
 
 from app.model.keyword.keyword import Keyword
@@ -22,5 +23,6 @@ class KeywordImpl(Keyword):
 Keywords = List[KeywordImpl]
 
 
-class KeywordBuilder(object):
+class KeywordBuilder:
+    @abstractmethod
     def build(self, word_scores_dict: WordScores, pos_tokens: []) -> Keywords: pass

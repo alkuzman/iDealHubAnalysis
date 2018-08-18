@@ -2,6 +2,7 @@ import copy
 from typing import List
 
 from app.analyzers.analyzer import Analyzer
+from app.model.analysis.request.analysis_request import AnalysisRequest
 from app.model.analysis.request.coverage_analysis_request import CoverageAnalysisRequest
 from app.model.analysis.response.coverage_analysis import CoverageAnalysis
 from app.model.analysis.response.descriptive_analysis_score import DescriptiveAnalysisScore
@@ -26,8 +27,6 @@ class CoverageAnalyzer(Analyzer[CoverageAnalysisRequest, CoverageAnalysis]):
             if not_covered:
                 not_covered_keywords.append(copy.copy(keyword))
         length = len(cover_keywords)
-        print("Length: ", length)
-        print("number_of_common_keywords", number_of_common_keywords)
         coverage = 0
         if length != 0:
             coverage = number_of_common_keywords / length
@@ -42,5 +41,5 @@ class CoverageAnalyzer(Analyzer[CoverageAnalysisRequest, CoverageAnalysis]):
                                                 covered_keywords, not_covered_keywords, coverage, score)
         return [problem_coverage]
 
-    def accepts(self, o: CoverageAnalysisRequest) -> bool:
+    def accepts(self, o: AnalysisRequest) -> bool:
         return isinstance(o, CoverageAnalysisRequest)

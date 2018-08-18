@@ -1,6 +1,7 @@
 from typing import List
 
 from app.analyzers.analyzer import Analyzer
+from app.model.analysis.request.analysis_request import AnalysisRequest
 from app.model.analysis.request.sneak_peek_quality_analysis_request import SneakPeekQualityAnalysisRequest
 from app.model.analysis.response.descriptive_analysis_score import DescriptiveAnalysisScore
 from app.model.analysis.response.impl.sneak_peek_quality_analysis_impl import SneakPeekQualityAnalysisImpl
@@ -37,5 +38,5 @@ class SneakPeekQualityAnalyzer(Analyzer[SneakPeekQualityAnalysisRequest, SneakPe
         return [SneakPeekQualityAnalysisImpl(analysis_request.get_sneak_peek(), analysis_request.get_main_document(),
                                              quality, score)]
 
-    def accepts(self, o: SneakPeekQualityAnalysisRequest) -> bool:
+    def accepts(self, o: AnalysisRequest) -> bool:
         return isinstance(o, SneakPeekQualityAnalysisRequest)

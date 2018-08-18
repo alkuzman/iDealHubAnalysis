@@ -1,9 +1,9 @@
 from flask import Blueprint
 
+from app.analyzers.algorithms.word_similarity.topic_word_similarity import TopicWordSimilarity
 from app.analyzers.similar_documents import text_popularity_coefficient
 from app.data_import.digital_library_theiet.parser import DigitalLibraryParser
 from app.data_import.topics.topic_reader import TopicReader
-from app.data_import.topics.word_similarity import WordSimilarity
 from app.database.neo4j_base_service import get_documents_from_database
 
 # This file is containing test functions in order to test the analyzers

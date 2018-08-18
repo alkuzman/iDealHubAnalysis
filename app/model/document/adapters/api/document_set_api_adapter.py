@@ -29,7 +29,7 @@ class DocumentSetApiAdapter(DocumentSet):
         api_document = self.api_documents.get(document_id, None)
         if api_document is None:
             raise Exception("Requested id doesn't exists in the document set")
-        # Get data for the api document
+        # Get data for the rest document
         data = self.get_data(api_document)
         document = DocumentImpl(identifier=api_document.id, data=data)
         self.documents[document.get_id()] = document

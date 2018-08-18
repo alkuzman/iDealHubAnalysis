@@ -1,9 +1,9 @@
+from app.analyzers.algorithms.word_similarity.word_similarity import WordSimilarity
 from app.data_import.topics.topic_reader import TopicReader
 
 
-class WordSimilarity(object):
-    def __init__(self, data_directory: str = "C:/Users/aleks/Documents/Data/iDeal-Hub/Analyzers/Topics/"):
-        topic_reader = TopicReader(data_directory)
+class TopicWordSimilarity(WordSimilarity):
+    def __init__(self, topic_reader: TopicReader):
         word_topic_distribution = topic_reader.read_word_topic_distribution()
         self.vocab_dict = topic_reader.read_vocab_dict()
         self.word_similarity_dict = topic_reader.calculate_similarity(word_topic_distribution)

@@ -3,7 +3,7 @@ from app.analyzers.keywords.relation_weight_calculator.relation_weight_calculato
 
 
 class CooccurrenceWeightCalculator(RelationWeightCalculator):
-    def __init__(self, window_size: int = 2):
+    def __init__(self, window_size: int):
         self.window_size = window_size
 
     def calculate(self, token_1: Token, token_2: Token) -> float:

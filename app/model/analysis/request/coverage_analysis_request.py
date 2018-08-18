@@ -1,4 +1,4 @@
-import abc
+from abc import abstractmethod
 from typing import List
 
 from app.model.analysis.request.analysis_request import AnalysisRequest
@@ -11,28 +11,28 @@ class CoverageAnalysisRequest(AnalysisRequest):
     Analysis request for coverage factor for one document over the other.
     """
 
-    @classmethod
+    @abstractmethod
     def get_cover(self) -> Document:
         """
         :return: document which should be anticipated as cover for requested analysis.
             """
         pass
 
-    @classmethod
+    @abstractmethod
     def get_covered(self) -> Document:
         """
         :return: document which should be anticipated as covered document for requested analysis.
             """
         pass
 
-    @classmethod
+    @abstractmethod
     def get_cover_keywords(self) -> List[Keyword]:
         """
         :return: list of keywords for the cover document.
             """
         pass
 
-    @classmethod
+    @abstractmethod
     def get_covered_keywords(self) -> List[Keyword]:
         """
         :return: list of keywords for covered document.

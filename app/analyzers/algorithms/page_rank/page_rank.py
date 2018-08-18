@@ -82,7 +82,6 @@ class PageRank(ScoreNode):
             if error < threshold or i == max_iterations:
                 break
             error = 0
-        print("Iterations: ", i)
 
     @staticmethod
     def calculate_node_score(node: PageRankNode, damping_factor: float) -> float:

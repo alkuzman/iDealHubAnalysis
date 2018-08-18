@@ -1,15 +1,15 @@
-import abc
+from abc import abstractmethod, ABCMeta
 from typing import List
 
 from app.model.document.data import Data
 
 
-class DataConverter(metaclass=abc.ABCMeta):
-
+class DataConverter(metaclass=ABCMeta):
     """
     This is converter of data
     """
-    @classmethod
+
+    @abstractmethod
     def convert(self, data: Data, from_content_type: str, to_content_type: str) -> List[Data]:
         """
         Convert of the data can result in multiple chunks of data

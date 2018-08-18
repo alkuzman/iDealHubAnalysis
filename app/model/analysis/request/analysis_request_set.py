@@ -1,4 +1,4 @@
-import abc
+from abc import abstractmethod
 from typing import List
 
 from app.model.analysis.request.analysis_request import AnalysisRequest
@@ -9,19 +9,19 @@ from app.model.analysis.response.keyword_analysis import KeywordAnalysis
 
 
 class AnalysisRequestSet(AnalysisRequest):
-    @classmethod
+    @abstractmethod
     def get_keyword_analysis_requests(self) -> List[KeywordAnalysisRequest]:
         pass
 
-    @classmethod
+    @abstractmethod
     def get_coverage_analysis_requests(self) -> List[CoverageAnalysisRequest]:
         pass
 
-    @classmethod
+    @abstractmethod
     def get_sneak_peak_quality_analysis_requests(self) -> List[SneakPeekQualityAnalysisRequest]:
         pass
 
-    @classmethod
+    @abstractmethod
     def set_keyword_analysis(self, keyword_analysis: List[KeywordAnalysis]):
         pass
 

@@ -1,13 +1,14 @@
-import abc
+from abc import abstractmethod, ABCMeta
 
 from app.model.document.document import Document
 
 
-class DocumentSet(metaclass=abc.ABCMeta):
+class DocumentSet(metaclass=ABCMeta):
     """
     This is set of documents
     """
-    @classmethod
+
+    @abstractmethod
     def get_document(self, document_id) -> Document:
         """
 

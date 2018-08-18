@@ -1,4 +1,4 @@
-import abc
+from abc import abstractmethod
 from typing import List
 
 from app.model.analysis.response.analysis import Analysis
@@ -11,14 +11,14 @@ class KeywordAnalysis(Analysis):
     Keyword analysis for given document
     """
 
-    @classmethod
+    @abstractmethod
     def get_document(self) -> Document:
         """
         :return: document for which the keyword analysis is done
             """
         pass
 
-    @classmethod
+    @abstractmethod
     def get_keywords(self) -> List[Keyword]:
         """
             :return: list of keywords for the document of this analysis

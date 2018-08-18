@@ -1,0 +1,1 @@
+from app.analyzers.algorithms.word_similarity.topic_word_similarity_module import TopicWordSimilarityModule

@@ -5,9 +5,13 @@ from app.model.analysis.request.analysis_request import AnalysisRequest
 from app.model.analysis.response.analysis import Analysis
 
 
-class AnalyzerRegistry(Analyzer):
-    def __init__(self):
+class AnalyzerRegistry(Analyzer[AnalysisRequest, Analysis]):
+    def __init__(self, *args, **kwargs):
         self.registry = []
+        for arg in args:
+            self.register(arg)
+        for arg in kwargs:
+            self.register(kwargs[arg])
 
     def register(self, analyzer: Analyzer):
         self.registry.append(analyzer)

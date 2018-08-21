@@ -1,0 +1,1 @@
+from app.analyzers.algorithms.page_rank.matrix_page_rank_module import MatrixPageRankModule

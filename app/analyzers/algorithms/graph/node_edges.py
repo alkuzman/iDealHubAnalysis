@@ -1,4 +1,5 @@
 import abc
+from abc import abstractmethod
 from typing import List
 
 from app.analyzers.algorithms.graph.edge import Edge
@@ -8,7 +9,7 @@ from app.analyzers.algorithms.graph.node import Node
 class NodeEdges(metaclass=abc.ABCMeta):
     """
         Node in the graph which contains the node info, but also the in and out edges. Using this node you can travel
-        trough the graph and find every other node (there is a path from this node to that one).
+        trough the graph and find every other node (if there is a path from this node to that one).
         This class is used only by the graph, and it should not be used directly.
         """
 
@@ -18,11 +19,10 @@ class NodeEdges(metaclass=abc.ABCMeta):
         collections of edges.
 
         :param node: which is the starting point from which you can get incoming and outgoing edges.
-        :param args: arbitrary arguments you can define for this objects.
-        :param kwargs: same as args except that they can have key from which you can access them in the future.
         """
         self.node = node
 
+    @abstractmethod
     def add_in_edge(self, edge: Edge) -> None:
         """
         Add incoming edge to this node.
@@ -31,6 +31,7 @@ class NodeEdges(metaclass=abc.ABCMeta):
         """
         pass
 
+    @abstractmethod
     def add_out_edge(self, edge: Edge) -> None:
         """
         Add outgoing edge to this node.
@@ -39,12 +40,14 @@ class NodeEdges(metaclass=abc.ABCMeta):
         """
         pass
 
+    @abstractmethod
     def get_in_edges(self) -> List[Edge]:
         """
         Get all incoming edges for this node.
         """
         pass
 
+    @abstractmethod
     def get_out_edges(self) -> List[Edge]:
         """
         Get all outgoing edges for this node
@@ -53,7 +56,7 @@ class NodeEdges(metaclass=abc.ABCMeta):
 
     def total_in_weight(self) -> float:
         """
-        Get the weight of this node which is calculated as sum of all incoming nodes weight.
+        Get the incoming weight of this node which is calculated as sum of all incoming nodes weight.
 
         :return: total incoming weight of this node.
         """
@@ -64,7 +67,7 @@ class NodeEdges(metaclass=abc.ABCMeta):
 
     def total_out_weight(self) -> float:
         """
-        Get the weight of this node which is calculated as sum of all outgoing nodes weight.
+        Get the outgoing weight of this node which is calculated as sum of all outgoing nodes weight.
 
         :return: total outgoing weight of this node.
         """

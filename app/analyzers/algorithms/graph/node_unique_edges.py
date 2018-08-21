@@ -1,3 +1,4 @@
+from operator import eq
 from typing import Dict, List
 
 from app.analyzers.algorithms.graph.edge import Edge
@@ -16,8 +17,6 @@ class NodeUniqueEdges(NodeEdges):
         collections of edges.
 
         :param node: which is the starting point from which you can get incoming and outgoing edges.
-        :param args: arbitrary arguments you can define for this objects.
-        :param kwargs: same as args except that they can have key from which you can access them in the future.
         """
         super().__init__(node)
         self.in_edges: Dict[str, Edge] = {}
@@ -30,6 +29,10 @@ class NodeUniqueEdges(NodeEdges):
 
         :param edge: new incoming edge which will be added to this node.
         """
+        if not eq(self.node, edge.get_destination()):
+            raise Exception("In order to add edge as incoming, the destination should be the equal to this node but "
+                            "they differ.", self.node, edge.get_destination())
+
         origin_name = edge.get_origin().get_name()
         old_edge = self.in_edges.get(origin_name)
         self.in_edges[origin_name] = edge
@@ -42,6 +45,10 @@ class NodeUniqueEdges(NodeEdges):
 
         :param edge: new outgoing edge which will be added to this node.
         """
+        if not eq(self.node, edge.get_origin()):
+            raise Exception("In order to add edge as outgoing, the source should be the equal to this node but they "
+                            "differ.", self.node, edge.get_origin())
+
         destination_name = edge.get_destination().get_name()
         self.out_edges[destination_name] = edge
 

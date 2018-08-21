@@ -33,18 +33,21 @@ class Graph(metaclass=abc.ABCMeta):
 
     def add_node(self, node: Node) -> None:
         """
-        Addition or replacement of the provided node using the node name as unique identifier in this graph.
+        Addition or replacement of the provided node using the node name as unique identifier in this graph. Also
+        the node with higher weight is kept.
 
         :param node: which will be added in this graph.
         """
         old_node = self.nodes.get(node.get_name(), None)
-        if old_node is None or old_node.get_node().get_weight() < node.get_weight():
+        if old_node is None:
             self.nodes[node.get_name()] = self.node_edges_provider(node=node)
+        elif old_node.get_node().get_weight() < node.get_weight():
+            old_node.node = node
 
     def create_node(self, name: str, initial_score: float = 1) -> Node:
         """
         First create and then add the node. If node with the same name exists than it will be replaced with the newly
-        created node.
+        created node only if the new weight is higher than the old one.
 
         :param name: unique identifier of the new node in this graph.
         :param initial_score: the initial score for this node (can change in the future).
@@ -80,10 +83,10 @@ class Graph(metaclass=abc.ABCMeta):
         """
         origin = self.get_node(origin_name)
         if origin is None:
-            raise Exception("origin node with name " + origin_name + "not fund in the graph.")
+            raise Exception("origin node with name " + origin_name + "not found in the graph.")
         destination = self.get_node(destination_name)
-        if origin is None:
-            raise Exception("destination node with name " + destination_name + "not fund in the graph.")
+        if destination is None:
+            raise Exception("destination node with name " + destination_name + "not found in the graph.")
         return self.add_edge(origin, destination, weight)
 
     def get_all_nodes(self) -> List[Node]:

@@ -23,7 +23,7 @@ class KeywordExtractor(object):
                  keyword_builder: KeywordBuilder,
                  weight_calculator: RelationWeightCalculator,
                  graph_provider: Provider,
-                 page_rank_provider):
+                 page_rank_provider: Provider):
         self.candidate_tokens_extractor = candidate_tokens_extractor
         self.keyword_builder = keyword_builder
         self.weight_calculator = weight_calculator

@@ -16,8 +16,6 @@ class Edge(object):
         :param origin: node from which this edge is originating.
         :param destination: node to which this edge is pointing, the destination.
         :param weight: strength of the relation between the origin and the destination, defaults 1.
-        :param args: other arbitrary arguments. Here you can keep everything may want to add in the edge.
-        :param kwargs: similar to params, except that arguments can have keys from which can be accessed later.
         """
         self.origin = origin
         self.destination = destination
@@ -25,7 +23,7 @@ class Edge(object):
 
     def get_origin(self) -> Node:
         """
-        :return: node from which this edge is loriginating.
+        :return: node from which this edge is originating.
         """
         return self.origin
 

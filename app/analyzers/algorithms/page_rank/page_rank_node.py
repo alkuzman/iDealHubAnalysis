@@ -3,7 +3,7 @@ from app.analyzers.algorithms.graph.node import Node
 
 class PageRankNode:
     """
-    Graph node in the page rank algorithm. It it wraps the :class:`Node` and adds additional information. For
+    Graph node in the page rank algorithm. It wraps the :class:`Node` and adds additional information. For
     example ``new_weight`` which is used as intermediate weight between the stages of the page rank algorithm.
     """
 

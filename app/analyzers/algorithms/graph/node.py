@@ -2,7 +2,7 @@ class Node(object):
     """
     Node in the graph. This class contains only info that defines the node.
     The basic information is name which uniquely identifies the node in the graph,
-    and the initial weight. Also arbitrary data can be stored in this node.
+    and the initial weight.
     """
 
     def __init__(self, name: str, initial_weight: float = 1) -> None:
@@ -12,8 +12,6 @@ class Node(object):
 
         :param name: name of the node, unique identifier in the graph.
         :param initial_weight: weight which will be used as initial value. Can change in the future.
-        :param args: arbitrary arguments which you may want to put in the node.
-        :param kwargs: same as arbitrary arguments except that they can have key for later access.
         """
         self.name = name
         self.weight = initial_weight

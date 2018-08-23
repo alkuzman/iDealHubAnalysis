@@ -4,7 +4,7 @@ from app.api_model.generated.api_validation_error_model_pb2 import ValidationErr
 from app.validation.validator import Validator
 
 
-class AnalysisRequestValidator(Validator):
+class AnalysisRequestValidator(Validator[AnalysisRequest]):
     def validate(self, analysis_request: AnalysisRequest) -> ValidationErrorResponse:
         validation_error_response = ValidationErrorResponse()
         # Data ids are unique

@@ -19,8 +19,8 @@ class NodeUniqueEdges(NodeEdges):
         :param node: which is the starting point from which you can get incoming and outgoing edges.
         """
         super().__init__(node)
-        self.in_edges: Dict[str, Edge] = {}
-        self.out_edges: Dict[str, Edge] = {}
+        self.in_edges: Dict[str, Edge] = dict()
+        self.out_edges: Dict[str, Edge] = dict()
 
     def add_in_edge(self, edge: Edge) -> None:
         """

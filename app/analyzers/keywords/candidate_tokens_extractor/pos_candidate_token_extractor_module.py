@@ -8,5 +8,7 @@ from app.analyzers.keywords.pos.pos_module import PosModule
 
 @containers.override(CandidateTokenExtractorModule)
 class PosCandidateTokenExtractorModule(containers.DeclarativeContainer):
-    candidate_token_extractor = providers.ThreadSafeSingleton(PosCandidateTokenExtractor,
-                                                              pos_tags=PosModule.pos_tags)
+    candidate_token_extractor = providers.ThreadSafeSingleton(
+        PosCandidateTokenExtractor,
+        pos_tags=PosModule.pos_tags
+    )

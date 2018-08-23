@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, FrozenSet
+from typing import List, Dict, Tuple
 
 Vocab = List[str]
 VocabDict = Dict[str, int]
@@ -6,7 +6,7 @@ TopicWordDistribution = List[List[float]]
 WordTopicDistribution = List[List[float]]
 TopicProbability = Tuple[int, float]
 MostProbableTopicByWords = Dict[int, TopicProbability]
-WordSimilarityDictionary = Dict[FrozenSet, float]
+WordSimilarityDictionary = Dict[int, Dict[int, float]]
 
 
 class TopicReader(object):
@@ -22,7 +22,7 @@ class TopicReader(object):
         return vocab
 
     def read_vocab_dict(self) -> VocabDict:
-        vocab_dict = {}
+        vocab_dict = dict()
         i = 0
         with open(self.data_directory + "Dataset.vocab") as vocab_file:
             for line in vocab_file:
@@ -61,13 +61,21 @@ class TopicReader(object):
 
     def calculate_similarity(self, word_topic_distribution: WordTopicDistribution) -> WordSimilarityDictionary:
         most_probable_topic_by_words = self.most_probable_topic_by_words(word_topic_distribution)
-        word_similarity = {}
+        word_similarity = dict()
         number_of_words = len(word_topic_distribution)
         for i in range(0, number_of_words - 1):
             for j in range(i + 1, number_of_words):
-                index = frozenset([i, j])
                 similarity = self.get_similarity(word_topic_distribution, most_probable_topic_by_words, i, j)
-                word_similarity[index] = similarity
+                sim = word_similarity.get(i, None)
+                if sim is None:
+                    sim = dict()
+                    word_similarity[i] = sim
+                sim[j] = similarity
+                sim = word_similarity.get(j, None)
+                if sim is None:
+                    sim = dict()
+                    word_similarity[j] = sim
+                sim[i] = similarity
         return word_similarity
 
     def get_similarity(self, word_topic_distribution: WordTopicDistribution,

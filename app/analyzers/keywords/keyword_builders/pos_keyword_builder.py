@@ -1,9 +1,11 @@
+from typing import Set
+
 from app.analyzers.keywords.keyword_builders.keyword_builder import WordScores, Keywords, KeywordImpl
 from app.analyzers.keywords.keyword_builders.simple_keyword_builder import SimpleKeywordBuilder
 
 
 class PosKeywordBuilder(SimpleKeywordBuilder):
-    def __init__(self, pos_tags: [], min_word_score: float):
+    def __init__(self, pos_tags: Set, min_word_score: float):
         self.pos_tags = pos_tags
         self.min_word_score = min_word_score
 

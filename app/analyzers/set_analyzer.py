@@ -19,6 +19,7 @@ class SetAnalyzer(Analyzer[AnalysisRequestSet, Analysis]):
     """
     Analyzer for AnalysisRequestSet which returns List[Analysis].
     """
+
     def __init__(self, keyword_analyzer_provider: Provider, coverage_analyzer: CoverageAnalyzer,
                  sneak_peek_analyzer: SneakPeekQualityAnalyzer, executor: Executor):
         self.keyword_analyzer_provider = keyword_analyzer_provider
@@ -65,6 +66,7 @@ class SetAnalyzer(Analyzer[AnalysisRequestSet, Analysis]):
                 keyword_analysis_dict[document_id] = data
             except Exception as exc:
                 print('%r generated an exception: %s' % (document_id, exc))
+                raise exc
 
         return keyword_analysis_dict
 

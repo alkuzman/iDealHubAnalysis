@@ -1,10 +1,12 @@
+from typing import Set
+
 from app.analyzers.keywords.candidate_tokens_extractor.candidate_token_extractor import CandidateTokenExtractor, \
     Tokens
 
 
 class PosCandidateTokenExtractor(CandidateTokenExtractor):
 
-    def __init__(self, pos_tags: []):
+    def __init__(self, pos_tags: Set):
         self.pos_tags = pos_tags
 
     def extract(self, pos_tokens: []) -> Tokens:

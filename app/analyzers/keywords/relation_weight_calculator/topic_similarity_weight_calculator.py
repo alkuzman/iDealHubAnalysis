@@ -13,5 +13,5 @@ class TopicSimilarityWeightCalculator(RelationWeightCalculator):
         word_2 = token_2[0]
         similarity = self.word_similarity.get_similarity(word_1.lower(), word_2.lower())
         if similarity > self.min_similarity:
-            return similarity
+            return similarity * 2
         return 0

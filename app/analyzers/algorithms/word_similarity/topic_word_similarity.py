@@ -10,7 +10,9 @@ class TopicWordSimilarity(WordSimilarity):
 
     def get_similarity(self, word1: str, word2: str) -> float:
         word1_id = self.vocab_dict.get(word1)
-        word2_id = self.vocab_dict.get(word2)
-        if word1_id is None or word2_id is None or word1_id == word2_id:
+        if word1_id is None:
             return 0.0
-        return self.word_similarity_dict[frozenset([word1_id, word2_id])]
+        word2_id = self.vocab_dict.get(word2)
+        if word2_id is None or word1_id == word2_id:
+            return 0.0
+        return self.word_similarity_dict.get(word1_id, dict()).get(word2_id, 0.0)

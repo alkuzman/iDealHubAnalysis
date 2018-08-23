@@ -29,7 +29,7 @@ class Graph(metaclass=abc.ABCMeta):
         super().__init__()
         self.node_provider = node_provider
         self.node_edges_provider = node_edges_provider
-        self.nodes: Dict[str, NodeEdges] = {}
+        self.nodes: Dict[str, NodeEdges] = dict()
 
     def add_node(self, node: Node) -> None:
         """

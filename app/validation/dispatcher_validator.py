@@ -1,13 +1,15 @@
+from typing import Any
+
 from app.api_model.generated.api_validation_error_model_pb2 import ValidationErrorResponse
 from app.validation.validator_registry import ValidatorRegistry
 from app.validation.validator import Validator
 
 
-class DispatcherValidator(Validator):
+class DispatcherValidator(Validator[Any]):
     def __init__(self, validator_registry: ValidatorRegistry):
         self.validator_registry = validator_registry
 
-    def validate(self, o) -> ValidationErrorResponse:
+    def validate(self, o: Any) -> ValidationErrorResponse:
         validation_error_response = ValidationErrorResponse()
         for descriptor in o.DESCRIPTOR.fields:
             value = getattr(o, descriptor.name)
@@ -25,3 +27,7 @@ class DispatcherValidator(Validator):
             return ValidationErrorResponse()
         validator = self.validator_registry.get(type(o))
         return validator.validate(o)
+
+    def validates(self) -> type:
+        return Any
+

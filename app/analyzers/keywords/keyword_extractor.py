@@ -1,3 +1,4 @@
+import time
 from typing import List, Tuple
 
 import nltk
@@ -11,6 +12,7 @@ from app.analyzers.keywords.candidate_tokens_extractor.candidate_token_extractor
 from app.analyzers.keywords.keyword_builders.keyword_builder import Keywords, KeywordBuilder
 from app.analyzers.keywords.keyword_utils import KeywordUtils
 from app.analyzers.keywords.relation_weight_calculator.relation_weight_calculator import RelationWeightCalculator
+import matplotlib.pyplot as plt
 
 NodeToken = Tuple[Node, int]
 NodeTokens = List[NodeToken]
@@ -36,13 +38,12 @@ class KeywordExtractor(object):
         graph: Graph = self.graph_provider()
         for text_piece in texts:
             tokens = word_tokenize(text_piece[0])
-            pos_tokens_piece = nltk.pos_tag(tokens)
+            pos_tokens_piece = [(pos_token[0].lower(), pos_token[1]) for pos_token in nltk.pos_tag(tokens)]
             pos_tokens += pos_tokens_piece
             nodes = self.add_nodes(graph, pos_tokens_piece, text_piece[1])
             node_tokens += nodes
 
         self.add_relations(graph, node_tokens)
-
         graph_page_rank: PageRank = self.page_rank_provider(graph=graph)
         graph_page_rank.run()
 
@@ -50,6 +51,10 @@ class KeywordExtractor(object):
         nodes = graph.get_all_nodes()
         # Order nodes by their weight descending.
         nodes.sort(key=lambda node: node.get_weight(), reverse=True)
+        # x = range(0, len(nodes))
+        # y = [node.get_weight() for node in nodes]
+        # plt.plot(x, y, 'bo')
+        # plt.show()
         return self.form_keywords(nodes, pos_tokens)
 
     def add_nodes(self, graph: Graph, pos_tokens, initial_score: float = 1) -> NodeTokens:
@@ -68,7 +73,6 @@ class KeywordExtractor(object):
                 token_1 = (node_token_1[0].get_name(), node_token_1[1])
                 token_2 = (node_token_2[0].get_name(), node_token_2[1])
                 weight = self.weight_calculator.calculate(token_1, token_2)
-
                 if weight > 0:
                     graph.add_edge(node_token_1[0], node_token_2[0], weight)
 
